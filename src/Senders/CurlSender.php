@@ -1,6 +1,6 @@
 <?php
 
-namespace Akrez\HttpProxy\Sender;
+namespace Akrez\HttpProxy\Senders;
 
 use Psr\Http\Message\ServerRequestInterface;
 

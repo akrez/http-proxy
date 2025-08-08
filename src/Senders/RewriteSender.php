@@ -1,6 +1,6 @@
 <?php
 
-namespace Akrez\HttpProxy\Sender;
+namespace Akrez\HttpProxy\Senders;
 
 use Akrez\HttpProxy\Rewriters\TextCssRewriter;
 use Akrez\HttpProxy\Rewriters\TextHtmlRewriter;
