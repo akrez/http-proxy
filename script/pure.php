@@ -1,7 +1,7 @@
 <?php
 
 use Akrez\HttpProxy\RequestFactory;
-use Akrez\HttpProxy\Sender\PureSender;
+use Akrez\HttpProxy\Senders\PureSender;
 use GuzzleHttp\Psr7\ServerRequest;
 
 require_once '../vendor/autoload.php';
