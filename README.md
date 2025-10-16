@@ -128,8 +128,11 @@ Host: www.proxy-host.com
 ریپوزیتوری را کلون کنید تا فایل‌ها را در اختیار داشته باشید.
 
 یکی از نسخه‌های پرتابل MitmProxy را از <https://www.mitmproxy.org/downloads> دانلود کرده و فایل `mitmdump.exe` را به پوشه `client` منتقل کنید.
+
 فایل mitmdump.exe را استخراج کرده و به پوشه client منتقل کنید.
+
 یک بار فایل mitmdump.exe را اجرا کنید تا فایل‌های گواهی امنیتی لازم ایجاد شوند.
+
 برای نصب گواهی، دستور زیر را در Command Prompt (خط فرمان ویندوز) اجرا کنید:
 
 ```bash
@@ -145,7 +148,7 @@ certutil -addstore root "%USERPROFILE%\.mitmproxy\mitmproxy-ca-cert.cer"
 mitmdump.exe -s addons.py
 ```
 
- در تنظیمات سیستم ویندوز، پراکسی را روی `127.0.0.1` و پورت را برابر `listen_port` (اینجا 8080) قرار دهید.
+ در تنظیمات سیستم ویندوز، پراکسی را روی `127.0.0.1` و پورت را برابر `local_server_port` (اینجا 8080) قرار دهید.
 
 </div>
 
