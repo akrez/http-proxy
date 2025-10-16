@@ -1,6 +1,6 @@
-![akrez http proxy](flow.svg "akrez http proxy")
-
 <div dir="rtl">
+
+![akrez http proxy](flow.svg "akrez http proxy")
 
 # راه‌اندازی فیلترشکن با هاست اشتراکی PHP
 
