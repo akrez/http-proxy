@@ -128,42 +128,22 @@ Host: www.proxy-host.com
 ریپوزیتوری را کلون کنید تا فایل‌ها را در اختیار داشته باشید.
 
 یکی از نسخه‌های پرتابل MitmProxy را از <https://www.mitmproxy.org/downloads> دانلود کرده و فایل `mitmdump.exe` را به پوشه `client` منتقل کنید.
+فایل mitmdump.exe را استخراج کرده و به پوشه client منتقل کنید.
+یک بار فایل mitmdump.exe را اجرا کنید تا فایل‌های گواهی امنیتی لازم ایجاد شوند.
+برای نصب گواهی، دستور زیر را در Command Prompt (خط فرمان ویندوز) اجرا کنید:
 
-گواهی‌های MitmProxy را نصب کنید:
+```bash
+certutil -addstore root "%USERPROFILE%\.mitmproxy\mitmproxy-ca-cert.cer"
+```
+برای مرورگر فایرفاکس، بر اساس راهنمای رسمی MitmProxy، مراحل اضافی را انجام دهید.
 
-> - یک بار `mitmdump.exe` را اجرا کنید تا فایل‌های گواهی ایجاد شوند.
-> - سپس دستور زیر را اجرا کنید:
->   ```bash
->   certutil -addstore root "%USERPROFILE%\.mitmproxy\mitmproxy-ca-cert.cer"
->   ```
-> - برای مرورگر Firefox مراحل اضافی را طبق راهنما انجام دهید.
+فایل addons.py را باز کنید و متغیر config را با تنظیمات مورد نیاز پر کنید.
 
-فایل `config.ini.default` را به `config.ini` تغییر نام داده و مقادیر زیر را ویرایش کنید:
+در نهایت، با پارامترهای زیر MitmProxy را اجرا کنید:
 
-   ```ini
-   [inline]
-   url=https://proxy-php-host.com/inline.php
-   ; host_header=proxy-php-host.com
-   ```
-
-   در صورت استفاده از IP:
-
-   ```ini
-   [inline]
-   url=https://100.100.100.100/inline.php
-   host_header=proxy-php-host.com
-   ```
-
-با پارامترهای زیر MitmProxy را اجرا کنید:
-
-   ```bash
-   .\mitmdump.exe -q -s addons.py \
-     --set listen_port=8080 \
-     --set flow_detail=0 \
-     --set connection_strategy=lazy \
-     --set ssl_insecure=true \
-     --set stream_large_bodies=128k
-   ```
+```bash
+mitmdump.exe -s addons.py
+```
 
  در تنظیمات سیستم ویندوز، پراکسی را روی `127.0.0.1` و پورت را برابر `listen_port` (اینجا 8080) قرار دهید.
 
