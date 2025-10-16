@@ -10,11 +10,13 @@ import configparser
 
 
 config = {
-    "selected_profile_name": None,
-    "local_server_port": 8080,
-    "host_script_url": "",
-    "new_host_header": "",
-    "mode": ""
+    # Required
+    "selected_profile_name": None,  # e.g., "profile1"
+    "host_script_url": "",          # e.g., "https://example.com/script.php"
+    # Optional
+    "local_server_port": 8080,      # default 8080
+    "new_host_header": None,        # Only set if host_script_url is IP-based, otherwise None
+    "mode": "inline"                # default "inline" currently only "inline" is supported
 }
 
 
