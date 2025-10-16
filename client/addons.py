@@ -11,12 +11,12 @@ import configparser
 
 config = {
     # Required
-    "selected_profile_name": None,  # e.g., "profile1"
-    "host_script_url": "",          # e.g., "https://example.com/script.php"
+    "selected_profile_name": None,  # e.g., "profile1" Set to None if not using config.ini
+    "host_script_url": "",          # e.g., "https://example.com/script.php" Full URL to the remote script
     # Optional
-    "local_server_port": 8080,      # default 8080
-    "new_host_header": None,        # Only set if host_script_url is IP-based, otherwise None
-    "mode": "inline"                # default "inline" currently only "inline" is supported
+    "local_server_port": 8080,      # default 8080 Port number for the local server
+    "new_host_header": None,        # host header value for IP-based. Leave as None for domain-based URLs
+    "mode": "inline"                # default "inline" currently only "inline" mode is supported
 }
 
 
