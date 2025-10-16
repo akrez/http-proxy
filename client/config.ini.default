@@ -1,3 +1,19 @@
-[inline]
-url=https://proxy-php-host.com/inline.php
-; host_header=proxy-php-host.com
+[config]
+local_server_port=8080
+selected_profile_name=profile2
+
+
+[profile1]
+host_script_url=https://a.com/script.php
+; new_host_header=a.com
+; mode=inline
+
+[profile2]
+host_script_url=https://10.10.10.10/script.php
+new_host_header=a.com
+; mode=inline
+
+[profile3]
+host_script_url=https://10.10.10.10/script.php
+new_host_header=a.com
+mode=inbody
