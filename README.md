@@ -2,7 +2,7 @@
 
 # راه‌اندازی فیلترشکن با هاست اشتراکی PHP
 
-<img src="flow.svg" width="48">
+<img src="flow.svg" width="100%">
 
 </div>
 
