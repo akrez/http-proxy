@@ -1,0 +1,115 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36" version="28.2.7">
+  <diagram name="Page-1" id="yBELx8RDoX3Lk5ZEMPBY">
+    <mxGraphModel dx="1042" dy="570" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="wyf5nEiX5FtiQB1MJ6Lu-49" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Comic Sans MS;exitX=0.498;exitY=1.025;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="wyf5nEiX5FtiQB1MJ6Lu-21" target="wyf5nEiX5FtiQB1MJ6Lu-76">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="420" y="330" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="wyf5nEiX5FtiQB1MJ6Lu-18" value="&lt;font style=&quot;color: rgb(153, 0, 0);&quot;&gt;OPTIONS &lt;/font&gt;&lt;font style=&quot;color: rgb(153, 153, 0);&quot;&gt;/sensored/content.json&lt;/font&gt; HTTP/1.1" style="swimlane;fontStyle=1;align=left;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;spacingLeft=4;spacingRight=4;fontFamily=Comic Sans MS;" vertex="1" parent="1">
+          <mxGeometry x="80" y="120" width="640" height="140" as="geometry">
+            <mxRectangle x="40" y="40" width="280" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="wyf5nEiX5FtiQB1MJ6Lu-19" value="&lt;div&gt;User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)&lt;/div&gt;&lt;div&gt;Host: &lt;font style=&quot;color: rgb(0, 153, 0);&quot;&gt;www.blocked.com&lt;/font&gt;&lt;/div&gt;&lt;div&gt;Content-Type: application/json&lt;/div&gt;" style="text;strokeColor=default;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontFamily=Comic Sans MS;" vertex="1" parent="wyf5nEiX5FtiQB1MJ6Lu-18">
+          <mxGeometry y="40" width="640" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="wyf5nEiX5FtiQB1MJ6Lu-20" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;fontFamily=Comic Sans MS;" vertex="1" parent="wyf5nEiX5FtiQB1MJ6Lu-18">
+          <mxGeometry y="100" width="640" as="geometry" />
+        </mxCell>
+        <mxCell id="wyf5nEiX5FtiQB1MJ6Lu-21" value="&lt;div&gt;{ &quot;name&quot;: &quot;John Doe&quot;, &quot;email&quot;: &quot;john.doe@example.com&quot; }&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontFamily=Comic Sans MS;" vertex="1" parent="wyf5nEiX5FtiQB1MJ6Lu-18">
+          <mxGeometry y="100" width="640" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="wyf5nEiX5FtiQB1MJ6Lu-29" value="&lt;div&gt;&lt;font style=&quot;color: rgb(102, 0, 0);&quot;&gt;POST &lt;/font&gt;/inline.php/https_&lt;font style=&quot;color: rgb(153, 0, 0);&quot;&gt;OPTIONS&lt;/font&gt;/&lt;font style=&quot;color: rgb(0, 153, 0);&quot;&gt;www.blocked.com&lt;/font&gt;&lt;font style=&quot;color: rgb(153, 153, 0);&quot;&gt;/sensored/content.json&lt;/font&gt; HTTP/1.1&lt;/div&gt;" style="swimlane;fontStyle=1;align=left;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;spacingLeft=4;spacingRight=4;fontFamily=Comic Sans MS;" vertex="1" parent="1">
+          <mxGeometry x="80" y="480" width="640" height="140" as="geometry">
+            <mxRectangle x="40" y="40" width="280" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="wyf5nEiX5FtiQB1MJ6Lu-30" value="&lt;div&gt;User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)&lt;/div&gt;&lt;div&gt;Content-Type: application/json&lt;/div&gt;&lt;div&gt;Host: &lt;font style=&quot;color: rgb(0, 102, 0);&quot;&gt;www.proxy-host.com&lt;/font&gt;&lt;/div&gt;" style="text;strokeColor=default;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontFamily=Comic Sans MS;" vertex="1" parent="wyf5nEiX5FtiQB1MJ6Lu-29">
+          <mxGeometry y="40" width="640" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="wyf5nEiX5FtiQB1MJ6Lu-31" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;fontFamily=Comic Sans MS;" vertex="1" parent="wyf5nEiX5FtiQB1MJ6Lu-29">
+          <mxGeometry y="100" width="640" as="geometry" />
+        </mxCell>
+        <mxCell id="wyf5nEiX5FtiQB1MJ6Lu-32" value="&lt;div&gt;{ &quot;name&quot;: &quot;John Doe&quot;, &quot;email&quot;: &quot;john.doe@example.com&quot; }&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontFamily=Comic Sans MS;" vertex="1" parent="wyf5nEiX5FtiQB1MJ6Lu-29">
+          <mxGeometry y="100" width="640" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="wyf5nEiX5FtiQB1MJ6Lu-50" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontFamily=Comic Sans MS;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="wyf5nEiX5FtiQB1MJ6Lu-76" target="wyf5nEiX5FtiQB1MJ6Lu-29">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="400" y="400" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <UserObject label="&lt;span style=&quot;font-size: 11px; text-wrap-mode: nowrap; background-color: rgb(255, 255, 255);&quot;&gt;Original request send to local proxy server from app like Chrome&lt;/span&gt;" placeholders="1" name="Variable" id="wyf5nEiX5FtiQB1MJ6Lu-57">
+          <mxCell style="text;html=1;strokeColor=none;fillColor=default;align=center;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;fontFamily=Comic Sans MS;" vertex="1" parent="1">
+            <mxGeometry x="120" y="290" width="560" height="20" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="local proxy server modify request to bypass limitation (change Host header and method and url&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;)&lt;/span&gt;" placeholders="1" name="Variable" id="wyf5nEiX5FtiQB1MJ6Lu-58">
+          <mxCell style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;fillColor=default;fontFamily=Comic Sans MS;" vertex="1" parent="1">
+            <mxGeometry x="120" y="430" width="560" height="20" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="wyf5nEiX5FtiQB1MJ6Lu-62" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontFamily=Comic Sans MS;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="399.5" y="620" as="sourcePoint" />
+            <mxPoint x="399.5" y="700" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <UserObject label="Modified request send to host by local proxy server" placeholders="1" name="Variable" id="wyf5nEiX5FtiQB1MJ6Lu-63">
+          <mxCell style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;fillColor=default;fontFamily=Comic Sans MS;" vertex="1" parent="1">
+            <mxGeometry x="120" y="650" width="560" height="20" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="wyf5nEiX5FtiQB1MJ6Lu-67" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontFamily=Comic Sans MS;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="399.5" y="760" as="sourcePoint" />
+            <mxPoint x="399.5" y="840" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <UserObject label="Script revert modified request to original request" placeholders="1" name="Variable" id="wyf5nEiX5FtiQB1MJ6Lu-68">
+          <mxCell style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;fillColor=default;fontFamily=Comic Sans MS;" vertex="1" parent="1">
+            <mxGeometry x="120" y="790" width="560" height="20" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="wyf5nEiX5FtiQB1MJ6Lu-74" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Comic Sans MS;exitX=0.499;exitY=1.045;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="wyf5nEiX5FtiQB1MJ6Lu-84">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="319.5" y="990" as="sourcePoint" />
+            <mxPoint x="720" y="1020" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="400" y="1060" />
+              <mxPoint x="720" y="1060" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <UserObject label="Original request resolved by Guzzle and response return" placeholders="1" name="Variable" id="wyf5nEiX5FtiQB1MJ6Lu-75">
+          <mxCell style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;fillColor=default;fontFamily=Comic Sans MS;" vertex="1" parent="1">
+            <mxGeometry x="120" y="1010" width="560" height="20" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="wyf5nEiX5FtiQB1MJ6Lu-76" value="Local Proxy Server&lt;br&gt;&lt;hr&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;run MitmProxy with addons.py script&lt;/span&gt;" style="label;whiteSpace=wrap;html=1;image=img/clipart/Gear_128x128.png;gradientColor=none;rounded=1;glass=0;fontFamily=Comic Sans MS;gradientDirection=west;" vertex="1" parent="1">
+          <mxGeometry x="160" y="340" width="480" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="wyf5nEiX5FtiQB1MJ6Lu-79" value="&lt;b&gt;PHP shared host&lt;/b&gt;&lt;br&gt;&lt;hr&gt;&lt;span style=&quot;font-weight: 400; text-align: center;&quot;&gt;http-proxy script that published on host&lt;/span&gt;" style="label;whiteSpace=wrap;html=1;image=img/clipart/Gear_128x128.png;gradientColor=none;rounded=1;glass=0;fontFamily=Comic Sans MS;" vertex="1" parent="1">
+          <mxGeometry x="160" y="700" width="480" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="wyf5nEiX5FtiQB1MJ6Lu-81" value="&lt;font style=&quot;color: rgb(153, 0, 0);&quot;&gt;OPTIONS &lt;/font&gt;&lt;font style=&quot;color: rgb(153, 153, 0);&quot;&gt;/sensored/content.json&lt;/font&gt; HTTP/1.1" style="swimlane;fontStyle=1;align=left;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;spacingLeft=4;spacingRight=4;fontFamily=Comic Sans MS;" vertex="1" parent="1">
+          <mxGeometry x="80" y="840" width="640" height="140" as="geometry">
+            <mxRectangle x="40" y="40" width="280" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="wyf5nEiX5FtiQB1MJ6Lu-82" value="&lt;div&gt;User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)&lt;/div&gt;&lt;div&gt;Host: &lt;font style=&quot;color: rgb(0, 153, 0);&quot;&gt;www.blocked.com&lt;/font&gt;&lt;/div&gt;&lt;div&gt;Content-Type: application/json&lt;/div&gt;" style="text;strokeColor=default;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontFamily=Comic Sans MS;" vertex="1" parent="wyf5nEiX5FtiQB1MJ6Lu-81">
+          <mxGeometry y="40" width="640" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="wyf5nEiX5FtiQB1MJ6Lu-83" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;fontFamily=Comic Sans MS;" vertex="1" parent="wyf5nEiX5FtiQB1MJ6Lu-81">
+          <mxGeometry y="100" width="640" as="geometry" />
+        </mxCell>
+        <mxCell id="wyf5nEiX5FtiQB1MJ6Lu-84" value="&lt;div&gt;{ &quot;name&quot;: &quot;John Doe&quot;, &quot;email&quot;: &quot;john.doe@example.com&quot; }&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontFamily=Comic Sans MS;" vertex="1" parent="wyf5nEiX5FtiQB1MJ6Lu-81">
+          <mxGeometry y="100" width="640" height="40" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

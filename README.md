@@ -2,7 +2,7 @@
 
 # راه‌اندازی فیلترشکن با هاست اشتراکی PHP
 
-![akrez http proxy](flow.svg "akrez http proxy")
+<img src="flow.svg" width="48">
 
 </div>
 
