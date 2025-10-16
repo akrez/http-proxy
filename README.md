@@ -121,7 +121,7 @@ Host: www.proxy-host.com
 <div dir="rtl">
 
 خیر. برای این کار از **MitmProxy** استفاده می‌کنیم تا درخواست‌ها به صورت خودکار دستکاری شوند. فایل‌های مورد نیاز
-در مسیر `client/inline.py` قرار دارند.
+در مسیر `client/addons.py` قرار دارند.
 
 ### مراحل نصب و راه‌اندازی
 
@@ -157,7 +157,7 @@ Host: www.proxy-host.com
 با پارامترهای زیر MitmProxy را اجرا کنید:
 
    ```bash
-   .\mitmdump.exe -q -s inline.py \
+   .\mitmdump.exe -q -s addons.py \
      --set listen_port=8080 \
      --set flow_detail=0 \
      --set connection_strategy=lazy \

@@ -30,7 +30,7 @@ class InlineMode:
         flow.request.port = new_port
         flow.request.headers["host"] = self.new_host_header
         #
-        print(f"[{strftime('%H:%M:%S', gmtime())}] {flow.request.method.ljust(8, ' ')}{old_host}")
+        # print(f"[{strftime('%H:%M:%S', gmtime())}] {flow.request.method.ljust(8, ' ')}{old_host}")
         # print(assemble_request(flow.request))
 
     def response(self, flow: http.HTTPFlow):
@@ -68,7 +68,6 @@ if mode not in ("inline", "inbody"):
 print(f"\n[config]\nselected_profile_name={selected_profile_name}\nlocal_server_port={local_server_port}\n\n[{selected_profile_name}]\nhost_script_url={host_script_url}\nnew_host_header={new_host_header}\nmode={mode}\n")
 
 ctx.options.listen_port = local_server_port
-ctx.options.flow_detail = 0
 ctx.options.connection_strategy = "lazy"
 ctx.options.ssl_insecure = True
 ctx.options.stream_large_bodies = "128k"

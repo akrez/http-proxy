@@ -1,6 +1,6 @@
-/client/mitmdump.exe
 /client/config.ini
-
+/client/mitmdump.exe
+/client/mitmproxy.exe
+/client/mitmweb.exe
 /vendor
 /composer.lock
-composer.phar
