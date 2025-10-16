@@ -129,8 +129,6 @@ Host: www.proxy-host.com
 
 یکی از نسخه‌های پرتابل MitmProxy را از <https://www.mitmproxy.org/downloads> دانلود کرده و فایل `mitmdump.exe` را به پوشه `client` منتقل کنید.
 
-فایل mitmdump.exe را استخراج کرده و به پوشه client منتقل کنید.
-
 یک بار فایل mitmdump.exe را اجرا کنید تا فایل‌های گواهی امنیتی لازم ایجاد شوند.
 
 برای نصب گواهی، دستور زیر را در Command Prompt (خط فرمان ویندوز) اجرا کنید:
