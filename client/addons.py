@@ -23,7 +23,7 @@ config = {
 class InlineMode:
     def __init__(self, host_script_url: str, host_header: str = ""):
         self.new_uri = urlparse(host_script_url)
-        self.new_host_header = host_header.strip() or self.new_uri.hostname
+        self.new_host_header = host_header.strip() if host_header else self.new_uri.hostname
     def request(self, flow: HTTPFlow):
         new_scheme = self.new_uri.scheme
         new_port = (
