@@ -33,7 +33,7 @@ class InlineMode:
         flow.request.port = new_port
         flow.request.headers["host"] = self.new_host_header
         #
-        # print(f"[{strftime('%H:%M:%S', gmtime())}] {flow.request.method.ljust(8, ' ')}{old_host}")
+        print(f"[{strftime('%H:%M:%S', gmtime())}] {flow.request.method.ljust(8, ' ')}{old_host}")
         # print(assemble_request(flow.request))
     def response(self, flow: http.HTTPFlow):
         # print(f"[{strftime('%H:%M:%S', gmtime())}] {flow.response.status_code} {flow.request.scheme}://{flow.request.host}{flow.request.path}\r")
