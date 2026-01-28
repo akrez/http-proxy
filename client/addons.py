@@ -7,17 +7,10 @@ from mitmproxy.http import HTTPFlow
 from urllib.parse import urlparse
 from time import gmtime, strftime
 import configparser
+import os
 
 
-config = {
-    # Required
-    "selected_profile_name": None,  # e.g., "profile1" Set to None if not using config.ini
-    "host_script_url": "",          # e.g., "https://example.com/script.php" Full URL to the remote script
-    # Optional
-    "local_server_port": 8080,      # default 8080 Port number for the local server
-    "new_host_header": None,        # host header value for IP-based. Leave as None for domain-based URLs
-    "mode": "inline"                # default "inline" currently only "inline" mode is supported
-}
+selected_profile_name="profile1"
 
 
 class InlineMode:
@@ -47,44 +40,44 @@ class InlineMode:
         pass
 
 
-def read_config_ini():
-    config = configparser.ConfigParser()
-    if not config.read("config.ini"):
+def read_profiles_ini(selected_profile_name):
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    profiles_path = os.path.join(script_dir, "profiles.ini")
+    #
+    profiles = configparser.ConfigParser()
+    if not profiles.read(profiles_path):
         raise FileNotFoundError(
-            "Configuration file 'config.ini' not found or cannot be read"
+            f"Configuration file '{profiles_path}' not found or cannot be read"
         )
-    selected_profile_name = config.get("config", "selected_profile_name", fallback="")
-    if not selected_profile_name in config:
-        available_profiles = ", ".join(f"'{p}'" for p in config.sections())
+    #
+    if not selected_profile_name in profiles:
+        available_profiles = ", ".join(f"'{p}'" for p in profiles.sections())
         raise ValueError(
-            f"Profile '{selected_profile_name}' not found in 'config.ini'. Available profiles: {available_profiles}"
+            f"Profile '{selected_profile_name}' not found in '{profiles_path}'. Available profiles: {available_profiles}"
         )
+    #
+    host_script_url = profiles.get(selected_profile_name, "host_script_url", fallback="")
+    if not host_script_url:
+        raise ValueError(f"host_script_url is required")
+    local_server_port = profiles.get(selected_profile_name, "local_server_port", fallback="")
+
     return {
         "selected_profile_name": selected_profile_name,
-        "local_server_port": config.get("config", "local_server_port", fallback=""),
-        "host_script_url": config.get(selected_profile_name, "host_script_url", fallback=""),
-        "new_host_header": config.get(selected_profile_name, "new_host_header", fallback=""),
-        "mode": config.get(selected_profile_name, "mode", fallback="")
+        "local_server_port": int(local_server_port if local_server_port else 8080),
+        "host_script_url": host_script_url,
+        "new_host_header": profiles.get(selected_profile_name, "new_host_header", fallback=urlparse(host_script_url).hostname),
+        "mode": profiles.get(selected_profile_name, "mode", fallback="inline")
     }
 
+profile= read_profiles_ini(selected_profile_name)
 
-if not config["selected_profile_name"]:
-    config = read_config_ini()
-
-
-config["local_server_port"] = int(config["local_server_port"] if config["local_server_port"] else 8080)
-if not config["host_script_url"]:
-    raise ValueError(f"host_script_url is required")
-config["mode"] = config["mode"] if config["mode"] in ("inline", "inbody") else "inline"
+print(f"selected_profile_name={profile["selected_profile_name"]}\nlocal_server_port={profile["local_server_port"]}\nhost_script_url={profile["host_script_url"]}\nnew_host_header={profile["new_host_header"]}\nmode={profile["mode"]}\n")
 
 
-print(f"\n[config]\nselected_profile_name={config["selected_profile_name"]}\nlocal_server_port={config["local_server_port"]}\n\n[{config["selected_profile_name"]}]\nhost_script_url={config["host_script_url"]}\nnew_host_header={config["new_host_header"]}\nmode={config["mode"]}\n")
-
-
-ctx.options.listen_port = config["local_server_port"]
+ctx.options.listen_port = profile["local_server_port"]
 ctx.options.connection_strategy = "lazy"
 ctx.options.ssl_insecure = True
 ctx.options.stream_large_bodies = "128k"
 
 
-addons = [InlineMode(config["host_script_url"], config["new_host_header"])]
+addons = [InlineMode(profile["host_script_url"], profile["new_host_header"])]
