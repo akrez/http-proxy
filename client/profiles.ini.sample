@@ -1,5 +1,5 @@
 [profile1]
-host_script_url=https://agent.akrez.ir/inline.php
+host_script_url=https://10.10.10.10/script.php
 ; new_host_header=a.com
 ; mode=inline
 ; local_server_port=8080
