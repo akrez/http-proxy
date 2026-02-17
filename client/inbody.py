@@ -67,13 +67,12 @@ def read_profiles_ini(selected_profile_name):
     return {
         "selected_profile_name": selected_profile_name,
         "host_script_url": host_script_url,
-        "new_host_header": profiles.get(selected_profile_name, "new_host_header", fallback=urlparse(host_script_url).hostname),
-        "mode": profiles.get(selected_profile_name, "mode", fallback="inline")
+        "new_host_header": profiles.get(selected_profile_name, "new_host_header", fallback=urlparse(host_script_url).hostname)
     }
 
 profile= read_profiles_ini(selected_profile_name)
 
-print(f"selected_profile_name={profile["selected_profile_name"]}\nlocal_server_port={ctx.options.listen_port}\nhost_script_url={profile["host_script_url"]}\nnew_host_header={profile["new_host_header"]}\nmode={profile["mode"]}\n")
+print(f"selected_profile_name={profile["selected_profile_name"]}\nlocal_server_port={ctx.options.listen_port}\nhost_script_url={profile["host_script_url"]}\nnew_host_header={profile["new_host_header"]}\n")
 
 
 ctx.options.connection_strategy = "lazy"

@@ -1,14 +1,11 @@
 [profile1]
 host_script_url=https://10.10.10.10/script.php
 ; new_host_header=a.com
-; mode=inline
 
 [profile2]
 host_script_url=https://10.10.10.10/script.php
 new_host_header=a.com
-; mode=inline
 
 [profile3]
 host_script_url=https://10.10.10.10/script.php
 new_host_header=a.com
-mode=inbody
