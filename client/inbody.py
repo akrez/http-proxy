@@ -10,7 +10,7 @@ import configparser
 import os
 
 
-selected_profile_name="akrezofski"
+selected_profile_name="profile1"
 
 
 class InlineMode:
@@ -25,13 +25,17 @@ class InlineMode:
             else 443 if new_scheme == "https" else 80
         )
         old_host = flow.request.host
+        new_body = assemble_request(flow.request)
         #
-        flow.request.path = f"{self.new_uri.path}/{flow.request.method}_{flow.request.scheme}/{flow.request.host}{flow.request.path}"
+        flow.request.headers.clear()
+        #
+        flow.request.path = f"{self.new_uri.path}/{flow.request.scheme}
         flow.request.method = "POST"
         flow.request.scheme = new_scheme
         flow.request.host = self.new_uri.hostname
         flow.request.port = new_port
         flow.request.headers["host"] = self.new_host_header
+        flow.request.set_content(new_body)
         #
         print(f"[{strftime('%H:%M:%S', gmtime())}] {flow.request.method.ljust(8, ' ')}{old_host}")
         # print(assemble_request(flow.request))
