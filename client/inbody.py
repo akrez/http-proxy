@@ -29,7 +29,7 @@ class InlineMode:
         #
         flow.request.headers.clear()
         #
-        flow.request.path = f"{self.new_uri.path}/{flow.request.scheme}
+        flow.request.path = f"{self.new_uri.path}/{flow.request.scheme}"
         flow.request.method = "POST"
         flow.request.scheme = new_scheme
         flow.request.host = self.new_uri.hostname
