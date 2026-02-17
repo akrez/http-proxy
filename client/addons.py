@@ -59,11 +59,9 @@ def read_profiles_ini(selected_profile_name):
     host_script_url = profiles.get(selected_profile_name, "host_script_url", fallback="")
     if not host_script_url:
         raise ValueError(f"host_script_url is required")
-    local_server_port = profiles.get(selected_profile_name, "local_server_port", fallback="")
 
     return {
         "selected_profile_name": selected_profile_name,
-        "local_server_port": int(local_server_port if local_server_port else 8080),
         "host_script_url": host_script_url,
         "new_host_header": profiles.get(selected_profile_name, "new_host_header", fallback=urlparse(host_script_url).hostname),
         "mode": profiles.get(selected_profile_name, "mode", fallback="inline")
@@ -71,10 +69,9 @@ def read_profiles_ini(selected_profile_name):
 
 profile= read_profiles_ini(selected_profile_name)
 
-print(f"selected_profile_name={profile["selected_profile_name"]}\nlocal_server_port={profile["local_server_port"]}\nhost_script_url={profile["host_script_url"]}\nnew_host_header={profile["new_host_header"]}\nmode={profile["mode"]}\n")
+print(f"selected_profile_name={profile["selected_profile_name"]}\nlocal_server_port={ctx.options.listen_port}\nhost_script_url={profile["host_script_url"]}\nnew_host_header={profile["new_host_header"]}\nmode={profile["mode"]}\n")
 
 
-ctx.options.listen_port = profile["local_server_port"]
 ctx.options.connection_strategy = "lazy"
 ctx.options.ssl_insecure = True
 ctx.options.stream_large_bodies = "128k"
