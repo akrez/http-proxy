@@ -12,7 +12,7 @@ class InbodyFactory extends Factory
     public function make(): ?RequestInterface
     {
         try {
-            $newServerRequest = Message::parseRequest((string) $this->globalServerRequest);
+            $newServerRequest = Message::parseRequest((string) $this->globalServerRequest->getBody());
 
             $uri = $newServerRequest->getUri();
             $uri = $uri->withScheme($this->scheme);
