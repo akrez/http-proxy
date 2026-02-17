@@ -2,16 +2,13 @@
 host_script_url=https://10.10.10.10/script.php
 ; new_host_header=a.com
 ; mode=inline
-; local_server_port=8080
 
 [profile2]
 host_script_url=https://10.10.10.10/script.php
 new_host_header=a.com
 ; mode=inline
-; local_server_port=8080
 
 [profile3]
 host_script_url=https://10.10.10.10/script.php
 new_host_header=a.com
 mode=inbody
-; local_server_port=8080
