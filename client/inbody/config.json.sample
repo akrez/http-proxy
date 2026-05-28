@@ -1,0 +1,13 @@
+{
+  "selected_profile": "profile2",
+  "profiles": {
+    "profile1": {
+      "host_ip": "8.8.8.8",
+      "host_script_url": "https://asd.ir/inbody.php"
+    },
+    "profile2": {
+      "host_ip": "1.1.1.1",
+      "host_script_url": "https://zxc.ir/inbody.php"
+    }
+  }
+}
