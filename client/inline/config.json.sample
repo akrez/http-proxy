@@ -2,10 +2,10 @@
   "selected_profile": "profile2",
   "profiles": {
     "profile1": {
-      "host_script_url": "https://asd.ir/inbody.php"
+      "host_script_url": "https://asd.ir/inline.php"
     },
     "profile2": {
-      "host_script_url": "https://zxc.ir/inbody.php"
+      "host_script_url": "https://zxc.ir/inline.php"
     }
   }
 }

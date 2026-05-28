@@ -1,4 +1,5 @@
-/client/profiles.ini
+/client/inbody/config.json
+/client/inbody/config.json
 /client/mitmdump.exe
 /client/mitmproxy.exe
 /client/mitmweb.exe

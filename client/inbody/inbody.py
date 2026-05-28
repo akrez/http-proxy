@@ -11,13 +11,11 @@ import os
 import json
 
 
-selected_profile_name="profile1"
-
 
 class Client:
     def __init__(self, host_script_url: str, host_ip: str = ""):
         self.new_uri = urlparse(host_script_url)
-        self.host_ip = host_ip.strip() if host_ip else self.new_uri.hostname
+        self.host_ip = host_ip if host_ip else None
     def request(self, flow: HTTPFlow):
         new_scheme = self.new_uri.scheme
         new_port = (
@@ -45,7 +43,8 @@ class Client:
         pass
 
 
-def read_profiles_json(selected_profile_name=None):
+
+def read_profiles_json():
     script_dir = os.path.dirname(os.path.abspath(__file__))
     config_path = os.path.join(script_dir, "config.json")
     if not os.path.exists(config_path):
@@ -80,14 +79,20 @@ def read_profiles_json(selected_profile_name=None):
         "host_ip": profile.get("host_ip", None)
     }
 
-profile = read_profiles_json(selected_profile_name)
+
+
+profile = read_profiles_json()
+
+
 
 print(f"selected_profile_name={profile["selected_profile_name"]}\nlocal_server_port={ctx.options.listen_port}\nhost_script_url={profile["host_script_url"]}\nhost_ip={profile["host_ip"]}\n")
+
 
 
 ctx.options.connection_strategy = "lazy"
 ctx.options.ssl_insecure = True
 ctx.options.stream_large_bodies = "128k"
+
 
 
 addons = [Client(profile["host_script_url"], profile["host_ip"])]
