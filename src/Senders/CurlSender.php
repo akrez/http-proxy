@@ -13,7 +13,7 @@ class CurlSender extends Sender
 
         $headers = [];
         foreach ($newRequest->getHeaders() as $name => $values) {
-            $headers[] = $name.': '.implode(', ', $values);
+            $headers[] = $name.': '.implode('; ', $values);
         }
 
         $options = [
