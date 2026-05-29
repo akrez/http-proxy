@@ -3,5 +3,8 @@
 /client/mitmdump.exe
 /client/mitmproxy.exe
 /client/mitmweb.exe
+/client/mitmdump
+/client/mitmproxy
+/client/mitmweb
 /vendor
 /composer.lock
