@@ -87,6 +87,7 @@ print(f"selected_profile_name={profile["selected_profile_name"]}\nlocal_server_p
 
 ctx.options.connection_strategy = "lazy"
 ctx.options.ssl_insecure = True
+ctx.options.http2 = False
 ctx.options.stream_large_bodies = "128k"
 
 

@@ -16,6 +16,8 @@ abstract class Factory
 
     protected bool $debug = false;
 
+    protected bool $base64 = false;
+
     public function __construct(protected ServerRequestInterface $globalServerRequest)
     {
         [
@@ -42,6 +44,7 @@ abstract class Factory
             'method' => $this->method,
             'scheme' => $this->scheme,
             'debug' => $this->debug,
+            'base64' => $this->base64,
         ] = $this->sanitizeConfig($globalServerRequest, explode('_', $configString));
     }
 
@@ -50,12 +53,18 @@ abstract class Factory
         return $this->debug;
     }
 
+    public function base64(): bool
+    {
+        return $this->base64;
+    }
+
     protected function sanitizeConfig(ServerRequestInterface $globalServerRequest, array $configs): array
     {
         return [
             'method' => $this->findInArray($configs, ['get', 'post', 'head', 'put', 'delete', 'options', 'trace', 'connect', 'patch'], $globalServerRequest->getMethod()),
             'scheme' => $this->findInArray($configs, ['https', 'http'], $globalServerRequest->getUri()->getScheme()),
             'debug' => $this->findInArray($configs, ['debug']) === 'debug',
+            'base64' => $this->findInArray($configs, ['base64']) === 'base64',
         ];
     }
 
