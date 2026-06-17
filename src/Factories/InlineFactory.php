@@ -17,7 +17,7 @@ class InlineFactory extends Factory
         }
 
         if ($this->base64()) {
-            $this->hostPath = base64_decode($this->hostPath);
+            $this->hostPath = base64_decode($this->hostPath, true);
         }
 
         $newUri = $this->createUri($this->globalServerRequest, $this->scheme, $this->hostPath);
