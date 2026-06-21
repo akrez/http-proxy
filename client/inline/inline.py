@@ -9,7 +9,6 @@ from time import gmtime, strftime
 import configparser
 import os
 import json
-import base64
 
 
 
@@ -26,9 +25,7 @@ class Client:
         )
         old_host = flow.request.host
         #
-        host_path = flow.request.host + flow.request.path
-        b64encoded = base64.b64encode(host_path.encode("utf-8")).decode("utf-8")
-        flow.request.path = f"{self.new_uri.path}/{flow.request.method}_{flow.request.scheme}/{b64encoded}"
+        flow.request.path = f"{self.new_uri.path}/{flow.request.method}_{flow.request.scheme}/{flow.request.host}{flow.request.path}"
         flow.request.method = "POST"
         flow.request.scheme = new_scheme
         flow.request.host = self.new_uri.hostname
