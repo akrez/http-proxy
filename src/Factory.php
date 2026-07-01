@@ -79,10 +79,12 @@ abstract class Factory
         return $default;
     }
 
-    public static function emitSender(Sender $sender): ?RequestInterface
+    public static function emitSender(Sender $sender, $factory = null): ?RequestInterface
     {
-        $serverRequest = ServerRequest::fromGlobals();
-        $factory = new static($serverRequest);
+        if($factory === null) {
+            $serverRequest = ServerRequest::fromGlobals();
+            $factory = new static($serverRequest);
+        }
         $newRequest = $factory->make();
         if ($newRequest) {
             $sender->setDebug($factory->debug())->emit($newRequest);
