@@ -9,13 +9,15 @@ from time import gmtime, strftime
 import configparser
 import os
 import json
+import base64
 
 
 
 class Client:
-    def __init__(self, host_script_url: str, host_ip: str = ""):
+    def __init__(self, host_script_url: str, host_ip: str = "", base64: bool=False):
         self.new_uri = urlparse(host_script_url)
         self.host_ip = host_ip if host_ip else None
+        self.base64 = base64
     def request(self, flow: HTTPFlow):
         new_scheme = self.new_uri.scheme
         new_port = (
@@ -25,7 +27,16 @@ class Client:
         )
         old_host = flow.request.host
         #
-        flow.request.path = f"{self.new_uri.path}/{flow.request.method}_{flow.request.scheme}/{flow.request.host}{flow.request.path}"
+        host_path = f"{flow.request.host}{flow.request.path}"
+        flow.request.path = "/".join([
+            self.new_uri.path,
+            "_".join(filter(None, [
+                flow.request.method,
+                flow.request.scheme,
+                "base64" if self.base64 else None,
+            ])),
+            base64.b64encode(host_path.encode("utf-8")).decode("utf-8") if self.base64 else host_path,
+        ])
         flow.request.method = "POST"
         flow.request.scheme = new_scheme
         flow.request.host = self.new_uri.hostname
@@ -72,6 +83,7 @@ def read_profiles_json():
     return {
         "selected_profile_name": selected_profile_name,
         "host_script_url": host_script_url,
+        "base64": profile.get("base64", False),
         "host_ip": profile.get("host_ip", None)
     }
 
@@ -81,7 +93,7 @@ profile = read_profiles_json()
 
 
 
-print(f"selected_profile_name={profile["selected_profile_name"]}\nlocal_server_port={ctx.options.listen_port}\nhost_script_url={profile["host_script_url"]}\nhost_ip={profile["host_ip"]}\n")
+print(f"selected_profile_name={profile["selected_profile_name"]}\nlocal_server_port={ctx.options.listen_port}\nhost_script_url={profile["host_script_url"]}\nhost_ip={profile["host_ip"]}\nbase64={profile["base64"]}\n")
 
 
 
@@ -92,4 +104,4 @@ ctx.options.stream_large_bodies = "128k"
 
 
 
-addons = [Client(profile["host_script_url"], profile["host_ip"])]
+addons = [Client(profile["host_script_url"], profile["host_ip"], profile["base64"])]
