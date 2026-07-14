@@ -17,10 +17,12 @@ class InlineFactory extends Factory
         }
 
         if ($this->base64()) {
-            $this->hostPath = base64_decode($this->hostPath, true);
+            $newUri = new Uri($this->scheme.'://'.base64_decode($this->hostPath));
+        } else {
+            $uri = new Uri($this->scheme.'://'.$this->hostPath);
+            $uri = $uri->withQuery($this->globalServerRequest->getUri()->getQuery());
+            $newUri = $uri->withFragment($this->globalServerRequest->getUri()->getFragment());
         }
-
-        $newUri = $this->createUri($this->globalServerRequest, $this->scheme, $this->hostPath);
 
         $newServerRequest = clone $this->globalServerRequest;
 
@@ -37,15 +39,6 @@ class InlineFactory extends Factory
         }
 
         return $newServerRequest;
-    }
-
-    private function createUri(ServerRequestInterface $serverRequest, string $scheme, string $hostPath)
-    {
-        $uri = new Uri($scheme.'://'.$hostPath);
-        $uri = $uri->withQuery($serverRequest->getUri()->getQuery());
-        $uri = $uri->withFragment($serverRequest->getUri()->getFragment());
-
-        return $uri;
     }
 
     private function getMultipartBoundary(ServerRequestInterface $globalServerRequest): ?string
