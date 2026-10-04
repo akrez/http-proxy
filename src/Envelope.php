@@ -10,7 +10,7 @@ use Psr\Http\Message\RequestInterface;
 
 class Envelope
 {
-    protected ?RequestInterface $newRequest = null;
+    protected ?RequestInterface $request = null;
 
     public function __construct(
         protected RequestInterface $serverRequest,
@@ -19,19 +19,19 @@ class Envelope
         try {
             $scheme = $config->scheme() ?: $serverRequest->getUri()->getScheme();
             //
-            $newRequest = Message::parseRequest((string) $serverRequest->getBody());
-            $newUri = $newRequest->getUri()->withScheme($scheme);
-            $this->newRequest = $newRequest->withUri($newUri);
+            $request = Message::parseRequest((string) $serverRequest->getBody());
+            $uri = $request->getUri()->withScheme($scheme);
+            $this->request = $request->withUri($uri);
         } catch (Exception $e) {
-            $this->newRequest = null;
+            $this->request = null;
         }
     }
 
     public function emit()
     {
         if ($this->config->debug()) {
-            $response = new Response(200, [], nl2br(Message::toString($this->newRequest)));
-        } elseif ($this->newRequest->getMethod() === 'CONNECT') {
+            $response = new Response(200, [], nl2br(Message::toString($this->request)));
+        } elseif ($this->request->getMethod() === 'CONNECT') {
             $response = new Response(200, [], '');
         } else {
             $options = [
@@ -48,7 +48,7 @@ class Envelope
                 ],
             ];
             $client = new Client;
-            $response = $client->send($this->newRequest, $options);
+            $response = $client->send($this->request, $options);
         }
 
         $raw = Message::toString($response);
