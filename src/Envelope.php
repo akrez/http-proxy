@@ -40,7 +40,6 @@ class Envelope
             $response = new Response(500);
         }
 
-        @ini_set('zlib.output_compression', '0');
         header('Content-Type: application/octet-stream', true, 200);
 
         if ($this->config->debug()) {
