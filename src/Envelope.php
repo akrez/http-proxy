@@ -40,6 +40,9 @@ class Envelope
             $response = new Response(500);
         }
 
+        @ini_set('zlib.output_compression', '0');
+        header('Content-Type: application/octet-stream', true, 200);
+
         if ($this->config->debug()) {
             $response = new Response(200, [], nl2br(Message::toString($this->request)));
         } elseif ($this->request->getMethod() === 'CONNECT') {
@@ -49,21 +52,14 @@ class Envelope
                 'http_errors' => false,
                 'allow_redirects' => false,
                 'verify' => false,
-                'decode_content' => false,
                 'timeout' => $this->config->timeout(),
                 'connect_timeout' => $this->config->timeout(),
-                'curl' => [
-                    CURLOPT_HTTP_TRANSFER_DECODING => false,
-                    CURLOPT_HTTP_CONTENT_DECODING => false,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                ],
             ];
             $client = new Client;
             $response = $client->send($this->request, $options);
         }
 
         $raw = Message::toString($response);
-        header('Content-Type: application/octet-stream', true, 200);
         echo $raw;
         flush();
     }
