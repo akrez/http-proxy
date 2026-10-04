@@ -6,11 +6,18 @@ use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Message;
 use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Psr7\ServerRequest;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class Envelope
 {
     protected ?RequestInterface $request = null;
+
+    public function request(): ?RequestInterface
+    {
+        return $this->request;
+    }
 
     public function __construct(
         protected RequestInterface $serverRequest,
@@ -27,8 +34,12 @@ class Envelope
         }
     }
 
-    public function emit()
+    public function send()
     {
+        if (! $this->request) {
+            $response = new Response(500);
+        }
+
         if ($this->config->debug()) {
             $response = new Response(200, [], nl2br(Message::toString($this->request)));
         } elseif ($this->request->getMethod() === 'CONNECT') {
@@ -55,5 +66,26 @@ class Envelope
         header('Content-Type: application/octet-stream', true, 200);
         echo $raw;
         flush();
+    }
+
+    public static function emit(?ServerRequestInterface $serverRequest = null)
+    {
+        if (! $serverRequest) {
+            $serverRequest = ServerRequest::fromGlobals();
+        }
+
+        $config = Config::make($serverRequest);
+        if (! $config) {
+            return false;
+        }
+
+        $envelope = new Envelope($serverRequest, $config);
+        if (! $envelope->request()) {
+            return false;
+        }
+
+        $envelope->send();
+
+        return true;
     }
 }
