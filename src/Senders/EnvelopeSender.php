@@ -19,6 +19,7 @@ class EnvelopeSender extends Sender
             'curl' => [
                 CURLOPT_HTTP_TRANSFER_DECODING => false,
                 CURLOPT_HTTP_CONTENT_DECODING => false,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             ],
         ];
 
