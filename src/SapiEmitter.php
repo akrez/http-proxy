@@ -17,15 +17,29 @@ use function sprintf;
  */
 final class SapiEmitter
 {
-    private const DEFAULT_BUFFER_SIZE = 8_388_608; // 8MB
+    private const DEFAULT_BUFFER_SIZE = 1_048_576; // 1MB
 
     /**
      * @psalm-var positive-int
      */
     private int $bufferSize;
 
+    private array $skipHeaders = [];
+
+    public function setSkipHeaders(array $headers): self
+    {
+        $this->skipHeaders = $headers;
+
+        return $this;
+    }
+
+    public function getSkipHeaders(): array
+    {
+        return $this->skipHeaders;
+    }
+
     /**
-     * @param int|null $bufferSize The size of the buffer in bytes to send the content of the message body.
+     * @param  int|null  $bufferSize  The size of the buffer in bytes to send the content of the message body.
      */
     public function __construct(?int $bufferSize = null)
     {
@@ -47,9 +61,9 @@ final class SapiEmitter
          */
         flush();
 
-        if (!$withoutBody) {
+        if (! $withoutBody) {
             $this->emitBody($response);
-	}
+        }
     }
 
     /**
@@ -68,8 +82,10 @@ final class SapiEmitter
 
         // Send headers
         foreach ($headers as $header => $values) {
-            foreach ($values as $value) {
-                header("$header: $value", false);
+            if (! in_array(strtolower($header), $this->skipHeaders)) {
+                foreach ($values as $value) {
+                    header("$header: $value", false);
+                }
             }
         }
 
@@ -91,7 +107,7 @@ final class SapiEmitter
     {
         $level = ob_get_level();
         $body = $response->getBody();
-        if (!$body->isReadable()) {
+        if (! $body->isReadable()) {
             return;
         }
 
