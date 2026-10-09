@@ -73,10 +73,6 @@ class Inline
                 ->withHeader('Accept-Encoding', 'identity');
         }
 
-        ini_set('output_buffering', 'Off');
-        ini_set('output_handler', '');
-        ini_set('zlib.output_compression', 0);
-
         $streamer = new SimpleStreamer('php://output', 'w+');
 
         if ($this->config->debug()) {
