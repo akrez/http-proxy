@@ -10,6 +10,7 @@ use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\ServerRequest;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class Inline
@@ -66,31 +67,32 @@ class Inline
             $response = new Response(500);
         }
 
+        ini_set('output_buffering', 'Off');
+        ini_set('output_handler', '');
+        ini_set('zlib.output_compression', 0);
+
+        $streamer = new SimpleStreamer('php://output', 'w+');
+
         if ($this->config->debug()) {
             $response = new Response(200, [], nl2br(Message::toString($this->request)));
         } elseif ($this->request->getMethod() === 'CONNECT') {
             $response = new Response(200, [], '');
         } else {
             $options = [
+                'referer' => false,
                 'http_errors' => false,
                 'allow_redirects' => false,
                 'verify' => false,
                 'timeout' => $this->config->timeout(),
                 'connect_timeout' => $this->config->timeout(),
+                'decode_content' => false,
+                //
+                'sink' => $streamer,
+                'on_headers' => fn (ResponseInterface $response) => $streamer->onHeaders($response),
             ];
             $client = new Client;
             $response = $client->send($this->request, $options);
         }
-
-        (new SapiEmitter)
-            ->setSkipHeaders([
-                'content-length',
-                'content-encoding',
-                'transfer-encoding',
-                'keep-alive',
-                'connection',
-            ])
-            ->emit($response);
     }
 
     public static function emit(?ServerRequestInterface $serverRequest = null)
