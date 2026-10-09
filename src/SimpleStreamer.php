@@ -46,10 +46,8 @@ class SimpleStreamer implements StreamInterface
 
         // Send headers
         foreach ($headers as $header => $values) {
-            if (! in_array(strtolower($header), $this->skipHeaders)) {
-                foreach ($values as $value) {
-                    header("$header: $value", false);
-                }
+            foreach ($values as $value) {
+                header("$header: $value", false);
             }
         }
 
