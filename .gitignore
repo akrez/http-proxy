@@ -1,11 +1,4 @@
-/client/envelope/config.json
-/client/inbody/config.json
-/client/inline/config.json
-/client/mitmdump.exe
-/client/mitmproxy.exe
-/client/mitmweb.exe
-/client/mitmdump
+/client/config.json
 /client/mitmproxy
-/client/mitmweb
 /vendor
 /composer.lock

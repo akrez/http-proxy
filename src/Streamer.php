@@ -8,7 +8,7 @@ use GuzzleHttp\Psr7\Utils;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
-class SimpleStreamer implements StreamInterface
+class Streamer implements StreamInterface
 {
     use StreamDecoratorTrait;
 

@@ -13,7 +13,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class Inline
+class Proxy
 {
     protected ?RequestInterface $request = null;
 
@@ -73,7 +73,7 @@ class Inline
                 ->withHeader('Accept-Encoding', 'identity');
         }
 
-        $streamer = new SimpleStreamer('php://output', 'w+');
+        $streamer = new Streamer('php://output', 'w+');
 
         if ($this->config->debug()) {
             $response = new Response(200, [], nl2br(Message::toString($this->request)));
