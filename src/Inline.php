@@ -77,8 +77,10 @@ class Inline
 
         if ($this->config->debug()) {
             $response = new Response(200, [], nl2br(Message::toString($this->request)));
+            echo $response->getBody()->__toString();
         } elseif ($this->request->getMethod() === 'CONNECT') {
             $response = new Response(200, [], '');
+            echo $response->getBody()->__toString();
         } else {
             $options = [
                 'referer' => false,
