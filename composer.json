@@ -9,6 +9,7 @@
     ],
     "require": {
         "php": "^8.0",
+        "akrez/http-runner": "^1.0",
         "guzzlehttp/guzzle": "*"
     },
     "require-dev": {

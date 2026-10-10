@@ -1,5 +1,7 @@
 <?php
 
-require_once 'index.php';
+require_once '../vendor/autoload.php';
 
-inline();
+use Akrez\HttpProxy\Inline;
+
+Inline::emit();

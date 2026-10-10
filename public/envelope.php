@@ -1,5 +1,7 @@
 <?php
 
-require_once 'index.php';
+require_once '../vendor/autoload.php';
 
-envelope();
+use Akrez\HttpProxy\Envelope;
+
+Envelope::emit();

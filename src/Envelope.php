@@ -55,7 +55,8 @@ class Envelope
                 'connect_timeout' => $this->config->timeout(),
             ];
             $client = new Client;
-            $response = $client->send($this->request, $options);
+            $response = $client->send($this->request, $options)
+                ->withoutHeader('Transfer-Encoding');
         }
 
         $raw = Message::toString($response);
