@@ -1,4 +1,5 @@
 /client/config.json
-/client/mitmproxy
+/client/linux-x86_64/mitmproxy
+/client/windows-x86_64/mitmproxy
 /vendor
 /composer.lock
