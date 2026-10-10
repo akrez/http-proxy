@@ -1,2 +1,2 @@
-.\mitmproxy\mitmdump.exe -q -s ..\inline.py --set listen_port=8080
+.\mitmproxy\mitmdump.exe -q -s ..\proxy.py --set listen_port=8080
 pause
