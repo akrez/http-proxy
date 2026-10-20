@@ -65,11 +65,11 @@ class Proxy
             $response = new Response(500);
         }
 
-        // if ($this->request->hasHeader('Accept-Encoding')) {
-        //     $this->request = $this->request
-        //         ->withoutHeader('Accept-Encoding')
-        //         ->withHeader('Accept-Encoding', 'identity');
-        // }
+        if ($this->request->hasHeader('Accept-Encoding')) {
+            $this->request = $this->request
+                ->withoutHeader('Accept-Encoding')
+                ->withHeader('Accept-Encoding', 'identity');
+        }
 
         if ($this->config->debug()) {
             echo nl2br(Message::toString($this->request));
