@@ -39,10 +39,13 @@ class CurlStreamer
             CURLOPT_POSTFIELDS => (string) $request->getBody(),
             CURLOPT_HTTPHEADER => $headers,
 
+            CURLOPT_HTTP_TRANSFER_DECODING => false,
             CURLOPT_HTTP_CONTENT_DECODING => false,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         ];
 
         $ch = curl_init();
+        
         curl_setopt_array($ch, $options);
         curl_exec($ch);
 
