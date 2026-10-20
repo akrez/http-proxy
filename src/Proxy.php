@@ -3,14 +3,12 @@
 namespace Akrez\HttpProxy;
 
 use Exception;
-use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Message;
 use GuzzleHttp\Psr7\MultipartStream;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\ServerRequest;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class Proxy
@@ -73,29 +71,12 @@ class Proxy
                 ->withHeader('Accept-Encoding', 'identity');
         }
 
-        $streamer = new Streamer('php://output', 'w+');
-
         if ($this->config->debug()) {
-            $response = new Response(200, [], nl2br(Message::toString($this->request)));
-            echo $response->getBody()->__toString();
+            echo nl2br(Message::toString($this->request));
         } elseif ($this->request->getMethod() === 'CONNECT') {
-            $response = new Response(200, [], '');
-            echo $response->getBody()->__toString();
         } else {
-            $options = [
-                'referer' => false,
-                'http_errors' => false,
-                'allow_redirects' => false,
-                'verify' => false,
-                'timeout' => $this->config->timeout(),
-                'connect_timeout' => $this->config->timeout(),
-                'decode_content' => false,
-                //
-                'sink' => $streamer,
-                'on_headers' => fn (ResponseInterface $response) => $streamer->onHeaders($response),
-            ];
-            $client = new Client;
-            $response = $client->send($this->request, $options);
+            $curlStreamer = new CurlStreamer;
+            $curlStreamer->stream($this->request, $this->config);
         }
     }
 
@@ -110,12 +91,12 @@ class Proxy
             return false;
         }
 
-        $inline = new Inline($serverRequest, $config);
-        if (! $inline->request()) {
+        $proxy = new static($serverRequest, $config);
+        if (! $proxy->request()) {
             return false;
         }
 
-        $inline->send();
+        $proxy->send();
 
         return true;
     }
