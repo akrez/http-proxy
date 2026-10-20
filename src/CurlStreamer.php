@@ -54,14 +54,14 @@ class CurlStreamer
 
         if (count($parts) == 2) {
             if (in_array(strtolower($parts[0]), [
-                'proxy-authenticate',
-                'proxy-authorization',
-                'te',
-                'transfer-encoding',
-                'keep-alive',
-                'connection',
-                'trailer',
-                'upgrade',
+                // 'proxy-authenticate',
+                // 'proxy-authorization',
+                // 'te',
+                // 'transfer-encoding',
+                // 'keep-alive',
+                // 'connection',
+                // 'trailer',
+                // 'upgrade',
             ])) {
                 // do nothing
             } else {
