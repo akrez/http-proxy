@@ -53,6 +53,10 @@ class Config
         ServerRequestInterface $globalServerRequest,
         int $timeout = 60
     ) {
+        if ($timeout <= 0) {
+            $timeout = 60;
+        }
+
         $configStringHostPath = $this->extractConfigStringHostPath($globalServerRequest);
         if ($configStringHostPath === null) {
             throw new Exception;
@@ -90,8 +94,9 @@ class Config
         ] = $globalServerRequest->getServerParams() + ['SCRIPT_NAME' => null, 'REQUEST_URI' => null];
 
         if (
-            strpos($requestUri, $scriptName) === 0 and
-            strlen($scriptName) <= strlen($requestUri)
+            is_string($requestUri) && is_string($scriptName) &&
+            ($requestUri !== '') && ($scriptName !== '') &&
+            (strpos($requestUri, $scriptName) === 0)
         ) {
             $url = substr($requestUri, strlen($scriptName));
 
@@ -103,7 +108,7 @@ class Config
 
     protected function sanitizeConfig(string $configString): array
     {
-        $configs = explode('_', $configString);
+        $configs = explode('_', strtolower($configString));
 
         return [
             'method' => $this->findInArray($configs, ['get', 'post', 'head', 'put', 'delete', 'options', 'trace', 'connect', 'patch']),
@@ -116,7 +121,7 @@ class Config
     protected function findInArray(array $needles, array $haystack, ?string $default = null): ?string
     {
         foreach ($needles as $needle) {
-            if (in_array(strtolower($needle), $haystack)) {
+            if (in_array($needle, $haystack)) {
                 return $needle;
             }
         }

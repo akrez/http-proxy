@@ -39,17 +39,13 @@ class CurlStreamer
             CURLOPT_POSTFIELDS => (string) $request->getBody(),
             CURLOPT_HTTPHEADER => $headers,
 
-            CURLOPT_HTTP_TRANSFER_DECODING => false,
             CURLOPT_HTTP_CONTENT_DECODING => false,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         ];
 
         $ch = curl_init();
-        
         curl_setopt_array($ch, $options);
         curl_exec($ch);
-
-        return true;
     }
 
     protected function headerCallback($ch, $headers)
@@ -58,11 +54,14 @@ class CurlStreamer
 
         if (count($parts) == 2) {
             if (in_array(strtolower($parts[0]), [
-                // 'content-length',
-                // 'content-encoding',
-                // 'transfer-encoding',
-                // 'keep-alive',
-                // 'connection',
+                'proxy-authenticate',
+                'proxy-authorization',
+                'te',
+                'transfer-encoding',
+                'keep-alive',
+                'connection',
+                'trailer',
+                'upgrade',
             ])) {
                 // do nothing
             } else {

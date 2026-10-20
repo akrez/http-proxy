@@ -30,7 +30,7 @@ class GuzzleStreamer implements StreamInterface
         unset($this->stream);
     }
 
-    public function stream(RequestInterface $request, Config $config)
+    public function stream(RequestInterface $request, Config $config): void
     {
         $options = [
             'referer' => false,
@@ -45,7 +45,7 @@ class GuzzleStreamer implements StreamInterface
             'on_headers' => fn (ResponseInterface $response) => $this->onHeaders($response),
         ];
         $client = new Client;
-        $response = $client->send($request, $options);
+        $client->send($request, $options);
     }
 
     protected function createStream(): StreamInterface

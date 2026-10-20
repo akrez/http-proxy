@@ -5,7 +5,6 @@ namespace Akrez\HttpProxy;
 use Exception;
 use GuzzleHttp\Psr7\Message;
 use GuzzleHttp\Psr7\MultipartStream;
-use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\ServerRequest;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\RequestInterface;
@@ -33,11 +32,11 @@ class Proxy
             $scheme = $config->scheme() ?: $serverRequest->getUri()->getScheme();
 
             if ($config->base64()) {
-                $newUri = new Uri($scheme.'://'.base64_decode($hostPath));
+                $decodedHostPath = base64_decode(rawurldecode($hostPath), true);
+                $newUri = new Uri($scheme.'://'.$decodedHostPath);
             } else {
                 $newUri = new Uri($scheme.'://'.$hostPath);
                 $newUri = $newUri->withQuery($serverRequest->getUri()->getQuery());
-                $newUri = $newUri->withFragment($serverRequest->getUri()->getFragment());
             }
 
             $newRequest = clone $serverRequest;
@@ -59,10 +58,10 @@ class Proxy
         }
     }
 
-    public function send()
+    public function send(): bool
     {
         if (! $this->request) {
-            $response = new Response(500);
+            return false;
         }
 
         if ($this->request->hasHeader('Accept-Encoding')) {
@@ -75,12 +74,14 @@ class Proxy
             echo nl2br(Message::toString($this->request));
         } elseif ($this->request->getMethod() === 'CONNECT') {
         } else {
-            $streamer = new GuzzleStreamer('php://output', 'w+');
+            $streamer = new GuzzleStreamer('php://output', 'wb');
             $streamer->stream($this->request, $this->config);
         }
+
+        return true;
     }
 
-    public static function emit(?ServerRequestInterface $serverRequest = null)
+    public static function emit(?ServerRequestInterface $serverRequest = null): bool
     {
         if (! $serverRequest) {
             $serverRequest = ServerRequest::fromGlobals();
@@ -96,9 +97,7 @@ class Proxy
             return false;
         }
 
-        $proxy->send();
-
-        return true;
+        return $proxy->send();
     }
 
     private function getMultipartBoundary(ServerRequestInterface $globalServerRequest): ?string
