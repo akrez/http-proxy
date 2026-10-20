@@ -74,7 +74,8 @@ class Proxy
             echo nl2br(Message::toString($this->request));
         } elseif ($this->request->getMethod() === 'CONNECT') {
         } else {
-            $streamer = new GuzzleStreamer('php://output', 'wb');
+            // $streamer = new GuzzleStreamer('php://output', 'wb');
+            $streamer = new CurlStreamer;
             $streamer->stream($this->request, $this->config);
         }
 
