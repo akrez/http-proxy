@@ -38,15 +38,15 @@ echo ' DONE' . PHP_EOL;
 // resulting list of all includes and ordered class list
 $files = array_merge($includes, $ordered);
 echo 'Concatenating ' . count($files) . ' files into ' . $out . '...';
-system('sed -n "/\#\!/,/^$/p" agent.php | sed -e "s/version dev/version ' . $version . '/" > ' . escapeshellarg($out));
+file_put_contents($out, "<?php\r\n#".date('YmdHis')."\r\n" . PHP_EOL);
 
 foreach ($files as $file) {
     $file = substr($file, strlen(__DIR__) + 1);
     system('(echo "# ' . $file . '"; grep -v "<?php" ' . escapeshellarg($file) . ') >> ' . escapeshellarg($out));
 }
 
-$file = 'agent.php';
-system('(echo "# ' . $file . '"; egrep -v "^<\?php|^\(@include " ' . escapeshellarg($file) . ') | sed -e "s/development/release/;/define(\'VERSION\'/c const VERSION=\"' . $version . '\";" >> ' . escapeshellarg($out));
+// Append entry point (public/inline.php without <?php and autoload include)
+file_put_contents($out, PHP_EOL . '# public/inline.php' . PHP_EOL . '\Akrez\HttpProxy\Proxy::emit();' . PHP_EOL, FILE_APPEND);
 chmod($out, 0755);
 echo ' DONE (' . filesize($out) . ' bytes)' . PHP_EOL;
 
