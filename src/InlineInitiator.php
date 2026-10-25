@@ -3,9 +3,7 @@
 namespace Akrez\HttpProxy;
 
 use Exception;
-use GuzzleHttp\Psr7\Message;
 use GuzzleHttp\Psr7\MultipartStream;
-use GuzzleHttp\Psr7\ServerRequest;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ServerRequestInterface;

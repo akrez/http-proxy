@@ -69,7 +69,7 @@ class GuzzleStreamer implements StreamInterface
 
         // Send headers
         foreach ($headers as $header => $values) {
-            if (!in_array(strtolower($header), $skipHeaders)) {
+            if (! in_array(strtolower($header), $skipHeaders)) {
                 foreach ($values as $value) {
                     header("$header: $value", false);
                 }

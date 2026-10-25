@@ -10,7 +10,7 @@ use Psr\Http\Message\ResponseInterface;
 
 class GuzzleSender
 {
-    public function stream(RequestInterface $request, Config $config): ResponseInterface
+    public function send(RequestInterface $request, Config $config): ResponseInterface
     {
         if ($request->getMethod() === 'CONNECT') {
             return new Response;
