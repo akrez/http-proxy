@@ -51,15 +51,7 @@ class InlineInitiator
                 return false;
             }
 
-            $configs = $this->sanitizeConfig($configString);
-
-            $config = (new Config)
-                ->setMethod($configs['method'])
-                ->setScheme($configs['scheme'])
-                ->setHostPath($hostPath)
-                ->setDebug($configs['debug'])
-                ->setBase64($configs['base64'])
-                ->setTimeout(60);
+            $config = (new Config)->setByConfigString($configString);
 
             $scheme = $config->scheme() ?: $serverRequest->getUri()->getScheme();
 
@@ -113,29 +105,6 @@ class InlineInitiator
         }
 
         return null;
-    }
-
-    protected function sanitizeConfig(string $configString): array
-    {
-        $configs = explode('_', strtolower($configString));
-
-        return [
-            'method' => $this->findInArray($configs, ['get', 'post', 'head', 'put', 'delete', 'options', 'trace', 'connect', 'patch']),
-            'scheme' => $this->findInArray($configs, ['https', 'http']),
-            'debug' => $this->findInArray($configs, ['debug']) === 'debug',
-            'base64' => $this->findInArray($configs, ['base64']) === 'base64',
-        ];
-    }
-
-    protected function findInArray(array $needles, array $haystack, ?string $default = null): ?string
-    {
-        foreach ($needles as $needle) {
-            if (in_array($needle, $haystack)) {
-                return $needle;
-            }
-        }
-
-        return $default;
     }
 
     public function send(): bool

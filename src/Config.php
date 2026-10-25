@@ -8,8 +8,6 @@ class Config
 
     protected ?string $scheme = null;
 
-    protected ?string $hostPath = null;
-
     protected bool $debug = false;
 
     protected bool $base64 = false;
@@ -24,11 +22,6 @@ class Config
     public function scheme(): ?string
     {
         return $this->scheme;
-    }
-
-    public function hostPath(): ?string
-    {
-        return $this->hostPath;
     }
 
     public function debug(): bool
@@ -60,13 +53,6 @@ class Config
         return $this;
     }
 
-    public function setHostPath(?string $hostPath): self
-    {
-        $this->hostPath = $hostPath;
-
-        return $this;
-    }
-
     public function setDebug(bool $debug): self
     {
         $this->debug = $debug;
@@ -86,5 +72,41 @@ class Config
         $this->timeout = $timeout;
 
         return $this;
+    }
+
+    public function setByConfigString(string $configString)
+    {
+        $configs = $this->sanitizeConfig($configString);
+
+        return $this
+            ->setMethod($configs['method'])
+            ->setScheme($configs['scheme'])
+            ->setDebug($configs['debug'])
+            ->setBase64($configs['base64'])
+            ->setTimeout($configs['timeout']);
+    }
+
+    protected function sanitizeConfig(string $configString): array
+    {
+        $configs = explode('_', strtolower($configString));
+
+        return [
+            'method' => $this->findInArray($configs, ['get', 'post', 'head', 'put', 'delete', 'options', 'trace', 'connect', 'patch']),
+            'scheme' => $this->findInArray($configs, ['https', 'http']),
+            'debug' => $this->findInArray($configs, ['debug']) === 'debug',
+            'base64' => $this->findInArray($configs, ['base64']) === 'base64',
+            'timeout' => 60,
+        ];
+    }
+
+    protected function findInArray(array $needles, array $haystack, ?string $default = null): ?string
+    {
+        foreach ($needles as $needle) {
+            if (in_array($needle, $haystack)) {
+                return $needle;
+            }
+        }
+
+        return $default;
     }
 }
