@@ -2,9 +2,6 @@
 
 namespace Akrez\HttpProxy;
 
-use Exception;
-use Psr\Http\Message\ServerRequestInterface;
-
 class Config
 {
     protected ?string $method = null;
@@ -49,83 +46,45 @@ class Config
         return $this->timeout;
     }
 
-    public function __construct(
-        ServerRequestInterface $globalServerRequest,
-        int $timeout = 60
-    ) {
-        if ($timeout <= 0) {
-            $timeout = 60;
-        }
+    public function setMethod(?string $method): self
+    {
+        $this->method = $method;
 
-        $configStringHostPath = $this->extractConfigStringHostPath($globalServerRequest);
-        if ($configStringHostPath === null) {
-            throw new Exception;
-        }
+        return $this;
+    }
 
-        [
-            0 => $configString,
-            1 => $hostPath,
-        ] = explode('/', $configStringHostPath, 2) + [0 => '', 1 => ''];
+    public function setScheme(?string $scheme): self
+    {
+        $this->scheme = $scheme;
 
-        $configs = $this->sanitizeConfig($configString);
+        return $this;
+    }
 
-        $this->method = $configs['method'];
-        $this->scheme = $configs['scheme'];
+    public function setHostPath(?string $hostPath): self
+    {
         $this->hostPath = $hostPath;
-        $this->debug = $configs['debug'];
-        $this->base64 = $configs['base64'];
+
+        return $this;
+    }
+
+    public function setDebug(bool $debug): self
+    {
+        $this->debug = $debug;
+
+        return $this;
+    }
+
+    public function setBase64(bool $base64): self
+    {
+        $this->base64 = $base64;
+
+        return $this;
+    }
+
+    public function setTimeout(int $timeout): self
+    {
         $this->timeout = $timeout;
-    }
 
-    public static function make(ServerRequestInterface $globalServerRequest): ?self
-    {
-        try {
-            return new self($globalServerRequest);
-        } catch (Exception $e) {
-            return null;
-        }
-    }
-
-    protected function extractConfigStringHostPath(ServerRequestInterface $globalServerRequest): ?string
-    {
-        [
-            'REQUEST_URI' => $requestUri,
-            'SCRIPT_NAME' => $scriptName,
-        ] = $globalServerRequest->getServerParams() + ['SCRIPT_NAME' => null, 'REQUEST_URI' => null];
-
-        if (
-            is_string($requestUri) && is_string($scriptName) &&
-            ($requestUri !== '') && ($scriptName !== '') &&
-            (strpos($requestUri, $scriptName) === 0)
-        ) {
-            $url = substr($requestUri, strlen($scriptName));
-
-            return ltrim($url, " \n\r\t\v\0/");
-        }
-
-        return null;
-    }
-
-    protected function sanitizeConfig(string $configString): array
-    {
-        $configs = explode('_', strtolower($configString));
-
-        return [
-            'method' => $this->findInArray($configs, ['get', 'post', 'head', 'put', 'delete', 'options', 'trace', 'connect', 'patch']),
-            'scheme' => $this->findInArray($configs, ['https', 'http']),
-            'debug' => $this->findInArray($configs, ['debug']) === 'debug',
-            'base64' => $this->findInArray($configs, ['base64']) === 'base64',
-        ];
-    }
-
-    protected function findInArray(array $needles, array $haystack, ?string $default = null): ?string
-    {
-        foreach ($needles as $needle) {
-            if (in_array($needle, $haystack)) {
-                return $needle;
-            }
-        }
-
-        return $default;
+        return $this;
     }
 }

@@ -28,8 +28,16 @@ class Proxy
 
     public function __construct(
         protected ServerRequestInterface $serverRequest,
-    ) {
+    ) {}
+
+    public function makeNewRequest(): bool
+    {
         try {
+            $this->request = null;
+            $this->config = null;
+
+            $serverRequest = $this->serverRequest;
+
             $configStringHostPath = $this->extractConfigStringHostPath($serverRequest);
             if ($configStringHostPath === null) {
                 return false;
@@ -39,7 +47,6 @@ class Proxy
                 0 => $configString,
                 1 => $hostPath,
             ] = explode('/', $configStringHostPath, 2) + [0 => '', 1 => ''];
-
             if (empty($hostPath)) {
                 return false;
             }
@@ -53,25 +60,6 @@ class Proxy
                 ->setDebug($configs['debug'])
                 ->setBase64($configs['base64'])
                 ->setTimeout(60);
-
-            $this->request = $this->makeRequest($serverRequest, $config);
-            $this->config = $config;
-
-            return true;
-
-        } catch (Exception $e) {
-        }
-
-        return false;
-    }
-
-    protected function makeRequest(
-        ServerRequestInterface $serverRequest,
-        Config $config
-    ) {
-        try {
-
-            $hostPath = $config->hostPath();
 
             $scheme = $config->scheme() ?: $serverRequest->getUri()->getScheme();
 
@@ -96,10 +84,15 @@ class Proxy
                 );
             }
 
-            return $newRequest;
+            $this->request = $newRequest;
+            $this->config = $config;
+
+            return true;
+
         } catch (Exception $e) {
-            return null;
         }
+
+        return false;
     }
 
     protected function extractConfigStringHostPath(ServerRequestInterface $globalServerRequest): ?string
