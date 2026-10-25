@@ -5,17 +5,17 @@ $suffix = '';
 system('COMPOSER_ALLOW_SUPERUSER=1');
 
 // use first argument as output file or use "agent-{version}.php"
-$out = isset($argv[1]) ? $argv[1] : ('agent' . $suffix . '.php');
+$out = isset($argv[1]) ? $argv[1] : ('agent'.$suffix.'.php');
 
 system('composer install --no-dev --classmap-authoritative');
-$classes = require __DIR__ . '/vendor/composer/autoload_classmap.php';
-$includes = require __DIR__ . '/vendor/composer/autoload_files.php';
+$classes = require __DIR__.'/vendor/composer/autoload_classmap.php';
+$includes = require __DIR__.'/vendor/composer/autoload_files.php';
 system('composer install');
 
-echo 'Loading ' . count($classes) . ' classes to determine load order...';
+echo 'Loading '.count($classes).' classes to determine load order...';
 
 // register autoloader which remembers load order
-$ordered = array();
+$ordered = [];
 spl_autoload_register(function ($name) use ($classes, &$ordered) {
     require $classes[$name];
     $ordered[$name] = $classes[$name];
@@ -33,22 +33,22 @@ foreach ($classes as $class => $path) {
     class_exists($class, true);
 }
 
-echo ' DONE' . PHP_EOL;
+echo ' DONE'.PHP_EOL;
 
 // resulting list of all includes and ordered class list
 $files = array_merge($includes, $ordered);
-echo 'Concatenating ' . count($files) . ' files into ' . $out . '...';
-file_put_contents($out, "<?php\r\n#".date('YmdHis')."\r\n" . PHP_EOL);
+echo 'Concatenating '.count($files).' files into '.$out.'...';
+file_put_contents($out, "<?php\r\n#".date('YmdHis')."\r\n".PHP_EOL);
 
 foreach ($files as $file) {
     $file = substr($file, strlen(__DIR__) + 1);
-    system('(echo "# ' . $file . '"; grep -v "<?php" ' . escapeshellarg($file) . ') >> ' . escapeshellarg($out));
+    system('(echo "# '.$file.'"; grep -v "<?php" '.escapeshellarg($file).') >> '.escapeshellarg($out));
 }
 
 // Append entry point (public/inline.php without <?php and autoload include)
-file_put_contents($out, PHP_EOL . '# public/inline.php' . PHP_EOL . '\Akrez\HttpProxy\Proxy::emit();' . PHP_EOL, FILE_APPEND);
+file_put_contents($out, PHP_EOL.'# public/inline.php'.PHP_EOL.'\Akrez\HttpProxy\Proxy::emit();'.PHP_EOL, FILE_APPEND);
 chmod($out, 0755);
-echo ' DONE (' . filesize($out) . ' bytes)' . PHP_EOL;
+echo ' DONE ('.filesize($out).' bytes)'.PHP_EOL;
 
 echo 'Optimizing resulting file...';
 $small = '';
@@ -56,15 +56,15 @@ $all = token_get_all(file_get_contents($out));
 
 // search next non-whitespace/non-comment token
 $next = function ($i) use (&$all) {
-    for ($i = $i + 1; !isset($all[$i]) || is_array($all[$i]) && ($all[$i][0] === T_COMMENT || $all[$i][0] === T_DOC_COMMENT || $all[$i][0] === T_WHITESPACE); ++$i)
-        ;
+    for ($i = $i + 1; ! isset($all[$i]) || is_array($all[$i]) && ($all[$i][0] === T_COMMENT || $all[$i][0] === T_DOC_COMMENT || $all[$i][0] === T_WHITESPACE); $i++);
+
     return $i;
 };
 
 // search previous non-whitespace/non-comment token
 $prev = function ($i) use (&$all) {
-    for ($i = $i - 1; $i >= 0 && (!isset($all[$i]) || (is_array($all[$i]) && ($all[$i][0] === T_COMMENT || $all[$i][0] === T_DOC_COMMENT || $all[$i][0] === T_WHITESPACE))); --$i)
-        ;
+    for ($i = $i - 1; $i >= 0 && (! isset($all[$i]) || (is_array($all[$i]) && ($all[$i][0] === T_COMMENT || $all[$i][0] === T_DOC_COMMENT || $all[$i][0] === T_WHITESPACE))); $i--);
+
     return $i;
 };
 
@@ -74,6 +74,7 @@ foreach ($all as $i => $token) {
         // remove all comments except first
         if ($first === true) {
             $first = false;
+
             continue;
         }
         unset($all[$i]);
@@ -83,7 +84,7 @@ foreach ($all as $i => $token) {
 
         if (is_array($token) && $token[0] === T_VARIABLE) {
             // use shorter variable notation `public $a` => `var $a`
-            $all[$i] = array(T_VAR, 'var');
+            $all[$i] = [T_VAR, 'var'];
         } else {
             // remove unneeded public identifier `public static function a()` => `static function a()`
             unset($all[$i]);
@@ -106,19 +107,19 @@ foreach ($all as $i => $token) {
     } elseif (is_array($token) && $token[0] === T_STRING) {
         // replace certain functions with their shorter alias function name
         // http://php.net/manual/en/aliases.php
-        static $replace = array(
-        'implode' => 'join',
-        'fwrite' => 'fputs',
-        'array_key_exists' => 'key_exists',
-        'current' => 'pos',
-        );
+        static $replace = [
+            'implode' => 'join',
+            'fwrite' => 'fputs',
+            'array_key_exists' => 'key_exists',
+            'current' => 'pos',
+        ];
 
         // check this has a replacement and "looks like" a function call
         // this works on a number of assumptions, such as not being aliased/namespaced
         if (isset($replace[$token[1]])) {
             $p = $all[$prev($i)];
 
-            if ($all[$next($i)] === '(' && (!is_array($p) || !in_array($p[0], array(T_FUNCTION, T_OBJECT_OPERATOR, T_DOUBLE_COLON, T_NEW)))) {
+            if ($all[$next($i)] === '(' && (! is_array($p) || ! in_array($p[0], [T_FUNCTION, T_OBJECT_OPERATOR, T_DOUBLE_COLON, T_NEW]))) {
                 $all[$i][1] = $replace[$all[$i][1]];
             }
         }
@@ -143,11 +144,11 @@ foreach ($all as $i => $token) {
             $last = substr($small, -1);
             $next = isset($all[$i + 1]) ? substr(is_array($all[$i + 1]) ? $all[$i + 1][1] : $all[$i + 1], 0, 1) : ' ';
 
-            $token = (strpos('()[]{}<>;=+-*/%&|,.:?!@\'"' . "\r\n", $last) !== false || strpos('()[]{}<>;=+-*/%&|,.:?!@\'"' . '\\$', $next) !== false) ? '' : ' ';
+            $token = (strpos('()[]{}<>;=+-*/%&|,.:?!@\'"'."\r\n", $last) !== false || strpos('()[]{}<>;=+-*/%&|,.:?!@\'"'.'\\$', $next) !== false) ? '' : ' ';
         }
     }
 
     $small .= isset($token[1]) ? $token[1] : $token;
 }
 file_put_contents($out, $small);
-echo ' DONE (' . strlen($small) . ' bytes)' . PHP_EOL;
+echo ' DONE ('.strlen($small).' bytes)'.PHP_EOL;
