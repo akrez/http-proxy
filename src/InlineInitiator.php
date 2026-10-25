@@ -30,7 +30,7 @@ class InlineInitiator
         protected ServerRequestInterface $serverRequest,
     ) {}
 
-    public function makeNewRequest(): bool
+    public function initiate(): bool
     {
         try {
             $this->request = null;
@@ -105,49 +105,6 @@ class InlineInitiator
         }
 
         return null;
-    }
-
-    public function send(): bool
-    {
-        if (! $this->request) {
-            return false;
-        }
-
-        if ($this->request->hasHeader('Accept-Encoding')) {
-            $this->request = $this->request
-                ->withoutHeader('Accept-Encoding')
-                ->withHeader('Accept-Encoding', 'identity');
-        }
-
-        if ($this->config->debug()) {
-            echo nl2br(Message::toString($this->request));
-        } elseif ($this->request->getMethod() === 'CONNECT') {
-        } else {
-            $streamer = new GuzzleStreamer('php://output', 'wb');
-            // $streamer = new CurlStreamer;
-            $streamer->stream($this->request, $this->config);
-        }
-
-        return true;
-    }
-
-    public static function emit(?ServerRequestInterface $serverRequest = null): bool
-    {
-        if (! $serverRequest) {
-            $serverRequest = ServerRequest::fromGlobals();
-        }
-
-        $config = Config::make($serverRequest);
-        if (! $config) {
-            return false;
-        }
-
-        $proxy = new static($serverRequest, $config);
-        if (! $proxy->request()) {
-            return false;
-        }
-
-        return $proxy->send();
     }
 
     private function getMultipartBoundary(ServerRequestInterface $globalServerRequest): ?string
