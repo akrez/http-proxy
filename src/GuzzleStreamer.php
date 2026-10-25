@@ -62,12 +62,17 @@ class GuzzleStreamer implements StreamInterface
 
         header_remove();
 
+        $skipHeaders = [
+        ];
+
         $headers = $response->getHeaders();
 
         // Send headers
         foreach ($headers as $header => $values) {
-            foreach ($values as $value) {
-                header("$header: $value", false);
+            if (!in_array(strtolower($header), $skipHeaders)) {
+                foreach ($values as $value) {
+                    header("$header: $value", false);
+                }
             }
         }
 
