@@ -12,6 +12,13 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class Proxy
 {
+    protected ?Config $config = null;
+
+    public function config(): ?Config
+    {
+        return $this->config;
+    }
+
     protected ?RequestInterface $request = null;
 
     public function request(): ?RequestInterface
@@ -21,13 +28,50 @@ class Proxy
 
     public function __construct(
         protected ServerRequestInterface $serverRequest,
-        protected Config $config
     ) {
         try {
-            $hostPath = $config->hostPath();
-            if (empty($hostPath)) {
-                throw new Exception;
+            $configStringHostPath = $this->extractConfigStringHostPath($serverRequest);
+            if ($configStringHostPath === null) {
+                return false;
             }
+
+            [
+                0 => $configString,
+                1 => $hostPath,
+            ] = explode('/', $configStringHostPath, 2) + [0 => '', 1 => ''];
+
+            if (empty($hostPath)) {
+                return false;
+            }
+
+            $configs = $this->sanitizeConfig($configString);
+
+            $config = (new Config)
+                ->setMethod($configs['method'])
+                ->setScheme($configs['scheme'])
+                ->setHostPath($hostPath)
+                ->setDebug($configs['debug'])
+                ->setBase64($configs['base64'])
+                ->setTimeout(60);
+
+            $this->request = $this->makeRequest($serverRequest, $config);
+            $this->config = $config;
+
+            return true;
+
+        } catch (Exception $e) {
+        }
+
+        return false;
+    }
+
+    protected function makeRequest(
+        ServerRequestInterface $serverRequest,
+        Config $config
+    ) {
+        try {
+
+            $hostPath = $config->hostPath();
 
             $scheme = $config->scheme() ?: $serverRequest->getUri()->getScheme();
 
@@ -52,10 +96,53 @@ class Proxy
                 );
             }
 
-            $this->request = $newRequest;
+            return $newRequest;
         } catch (Exception $e) {
-            $this->request = null;
+            return null;
         }
+    }
+
+    protected function extractConfigStringHostPath(ServerRequestInterface $globalServerRequest): ?string
+    {
+        [
+            'REQUEST_URI' => $requestUri,
+            'SCRIPT_NAME' => $scriptName,
+        ] = $globalServerRequest->getServerParams() + ['SCRIPT_NAME' => null, 'REQUEST_URI' => null];
+
+        if (
+            is_string($requestUri) && is_string($scriptName) &&
+            ($requestUri !== '') && ($scriptName !== '') &&
+            (strpos($requestUri, $scriptName) === 0)
+        ) {
+            $url = substr($requestUri, strlen($scriptName));
+
+            return ltrim($url, " \n\r\t\v\0/");
+        }
+
+        return null;
+    }
+
+    protected function sanitizeConfig(string $configString): array
+    {
+        $configs = explode('_', strtolower($configString));
+
+        return [
+            'method' => $this->findInArray($configs, ['get', 'post', 'head', 'put', 'delete', 'options', 'trace', 'connect', 'patch']),
+            'scheme' => $this->findInArray($configs, ['https', 'http']),
+            'debug' => $this->findInArray($configs, ['debug']) === 'debug',
+            'base64' => $this->findInArray($configs, ['base64']) === 'base64',
+        ];
+    }
+
+    protected function findInArray(array $needles, array $haystack, ?string $default = null): ?string
+    {
+        foreach ($needles as $needle) {
+            if (in_array($needle, $haystack)) {
+                return $needle;
+            }
+        }
+
+        return $default;
     }
 
     public function send(): bool
