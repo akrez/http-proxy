@@ -24,7 +24,16 @@ class Proxy
 
         $response = $this->guzzleSender->send($request, $this->inlineinitiator->config());
 
-        $this->sapiEmitter->emit($response);
+        $this->sapiEmitter->setSkipHeaders([
+            'proxy-authenticate',
+            'proxy-authorization',
+            'te',
+            'transfer-encoding',
+            'keep-alive',
+            'connection',
+            'trailer',
+            'upgrade',
+        ])->emit($response);
 
         return true;
     }
