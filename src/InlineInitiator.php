@@ -10,7 +10,7 @@ use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class Proxy
+class InlineInitiator
 {
     protected ?Config $config = null;
 
