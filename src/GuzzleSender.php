@@ -27,6 +27,7 @@ class GuzzleSender
             'verify' => false,
             'timeout' => $config->timeout(),
             'connect_timeout' => $config->timeout(),
+            'decode_content' => false,
         ];
 
         $client = new Client;
