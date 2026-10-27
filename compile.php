@@ -5,7 +5,7 @@ $suffix = '';
 system('COMPOSER_ALLOW_SUPERUSER=1');
 
 // use first argument as output file or use "agent-{version}.php"
-$out = isset($argv[1]) ? $argv[1] : ('agent'.$suffix.'.php');
+$out = isset($argv[1]) ? $argv[1] : ('proxy'.$suffix.'.php');
 
 system('composer install --no-dev --classmap-authoritative');
 $classes = require __DIR__.'/vendor/composer/autoload_classmap.php';
