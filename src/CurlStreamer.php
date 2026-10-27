@@ -2,12 +2,23 @@
 
 namespace Akrez\HttpProxy;
 
+use GuzzleHttp\Psr7\Message;
 use Psr\Http\Message\RequestInterface;
 
 class CurlStreamer
 {
-    public function stream(RequestInterface $request, Config $config)
+    public function send(RequestInterface $request, Config $config)
     {
+        if ($request->getMethod() === 'CONNECT') {
+            return;
+        }
+
+        if ($config->debug()) {
+            echo nl2br(Message::toString($request));
+
+            return;
+        }
+
         $url = (string) $request->getUri();
 
         $headers = [];

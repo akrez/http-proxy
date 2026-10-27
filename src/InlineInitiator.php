@@ -74,6 +74,8 @@ class InlineInitiator
                 );
             }
 
+            $newRequest = $this->filterAcceptEncoding($newRequest);
+
             $this->request = $newRequest;
             $this->config = $config;
 
@@ -105,7 +107,7 @@ class InlineInitiator
         return null;
     }
 
-    private function getMultipartBoundary(ServerRequestInterface $globalServerRequest): ?string
+    protected function getMultipartBoundary(ServerRequestInterface $globalServerRequest): ?string
     {
         $contentType = $globalServerRequest->getHeaderLine('Content-Type');
 
@@ -119,7 +121,7 @@ class InlineInitiator
         return null;
     }
 
-    private function getMultipartStream(string $multipartBoundary, ServerRequestInterface $globalServerRequest)
+    protected function getMultipartStream(string $multipartBoundary, ServerRequestInterface $globalServerRequest)
     {
         $elements = [];
 
@@ -141,5 +143,45 @@ class InlineInitiator
         }
 
         return new MultipartStream($elements, $multipartBoundary);
+    }
+
+    protected function filterAcceptEncoding(RequestInterface $request)
+    {
+        if (! $request->hasHeader('Accept-Encoding')) {
+            return $request;
+        }
+
+        $supportedEncodings = ['identity'];
+        if (function_exists('gzdecode')) {
+            $supportedEncodings[] = 'gzip';
+        }
+        if (function_exists('gzinflate')) {
+            $supportedEncodings[] = 'deflate';
+        }
+        if (function_exists('brotli_uncompress')) {
+            $supportedEncodings[] = 'br';
+        }
+        if (function_exists('zstd_uncompress')) {
+            $supportedEncodings[] = 'zstd';
+        }
+
+        $clientEncodings = array_map('trim', explode(',', $request->getHeaderLine('Accept-Encoding')));
+
+        $filtered = [];
+        foreach ($clientEncodings as $encoding) {
+            // Extract encoding name without quality value (e.g. "gzip;q=0.8" -> "gzip")
+            $name = strtolower(trim(explode(';', $encoding)[0]));
+            if (in_array($name, $supportedEncodings, true)) {
+                $filtered[] = $encoding;
+            }
+        }
+
+        if (empty($filtered)) {
+            $filtered[] = 'identity';
+        }
+
+        return $request
+            ->withoutHeader('Accept-Encoding')
+            ->withHeader('Accept-Encoding', implode(', ', $filtered));
     }
 }
