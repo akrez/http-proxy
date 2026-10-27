@@ -7,4 +7,4 @@ include '../vendor/autoload.php';
 
 $serverRequest = ServerRequest::fromGlobals();
 
-Proxy::inlineGuzzleSapi($serverRequest);
+Proxy::inlineCurl($serverRequest);
