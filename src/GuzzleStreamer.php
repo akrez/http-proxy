@@ -4,6 +4,7 @@ namespace Akrez\HttpProxy;
 
 use Exception;
 use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Message;
 use GuzzleHttp\Psr7\StreamDecoratorTrait;
 use GuzzleHttp\Psr7\Utils;
 use Psr\Http\Message\RequestInterface;
@@ -30,8 +31,18 @@ class GuzzleStreamer implements StreamInterface
         unset($this->stream);
     }
 
-    public function stream(RequestInterface $request, Config $config): void
+    public function send(RequestInterface $request, Config $config)
     {
+        if ($request->getMethod() === 'CONNECT') {
+            return;
+        }
+
+        if ($config->debug()) {
+            echo nl2br(Message::toString($request));
+
+            return;
+        }
+
         $options = [
             'referer' => false,
             'http_errors' => false,
