@@ -1,24 +1,34 @@
 <?php
 
-namespace Akrez\HttpProxy\Senders;
+namespace Akrez\HttpProxy;
 
-use Akrez\HttpProxy\Sender;
+use GuzzleHttp\Psr7\Message;
 use Psr\Http\Message\RequestInterface;
 
-class CurlSender extends Sender
+class CurlStreamer
 {
-    protected function emitRequest(RequestInterface $newRequest)
+    public function send(RequestInterface $request, Config $config)
     {
-        $url = (string) $newRequest->getUri();
+        if ($request->getMethod() === 'CONNECT') {
+            return;
+        }
+
+        if ($config->debug()) {
+            echo nl2br(Message::toString($request));
+
+            return;
+        }
+
+        $url = (string) $request->getUri();
 
         $headers = [];
-        foreach ($newRequest->getHeaders() as $name => $values) {
+        foreach ($request->getHeaders() as $name => $values) {
             $headers[] = $name.': '.implode('; ', $values);
         }
 
         $options = [
-            CURLOPT_CONNECTTIMEOUT => $this->timeout,
-            CURLOPT_TIMEOUT => $this->timeout,
+            CURLOPT_CONNECTTIMEOUT => $config->timeout(),
+            CURLOPT_TIMEOUT => $config->timeout(),
 
             CURLOPT_RETURNTRANSFER => false,
             CURLOPT_HEADER => false,
@@ -35,35 +45,34 @@ class CurlSender extends Sender
             CURLOPT_FORBID_REUSE => true,
             CURLOPT_FRESH_CONNECT => true,
 
-            CURLOPT_BUFFERSIZE => $this->bufferSize,
-
             CURLOPT_URL => $url,
-            CURLOPT_CUSTOMREQUEST => $newRequest->getMethod(),
-            CURLOPT_POSTFIELDS => (string) $newRequest->getBody(),
+            CURLOPT_CUSTOMREQUEST => $request->getMethod(),
+            CURLOPT_POSTFIELDS => (string) $request->getBody(),
             CURLOPT_HTTPHEADER => $headers,
 
             CURLOPT_HTTP_CONTENT_DECODING => false,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         ];
 
         $ch = curl_init();
         curl_setopt_array($ch, $options);
         curl_exec($ch);
-        curl_close($ch);
-
-        return true;
     }
 
-    private function headerCallback($ch, $headers)
+    protected function headerCallback($ch, $headers)
     {
         $parts = explode(':', $headers, 2);
 
         if (count($parts) == 2) {
             if (in_array(strtolower($parts[0]), [
-                // 'content-length',
-                // 'content-encoding',
+                // 'proxy-authenticate',
+                // 'proxy-authorization',
+                // 'te',
                 // 'transfer-encoding',
                 // 'keep-alive',
                 // 'connection',
+                // 'trailer',
+                // 'upgrade',
             ])) {
                 // do nothing
             } else {
@@ -78,7 +87,7 @@ class CurlSender extends Sender
         return strlen($headers);
     }
 
-    private function writeCallback($ch, $str)
+    protected function writeCallback($ch, $str)
     {
         $len = strlen($str);
 

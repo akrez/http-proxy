@@ -3,12 +3,15 @@
 namespace Akrez\HttpProxy;
 
 use Exception;
+use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Message;
 use GuzzleHttp\Psr7\StreamDecoratorTrait;
 use GuzzleHttp\Psr7\Utils;
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
-class SimpleStreamer implements StreamInterface
+class GuzzleStreamer implements StreamInterface
 {
     use StreamDecoratorTrait;
 
@@ -28,12 +31,41 @@ class SimpleStreamer implements StreamInterface
         unset($this->stream);
     }
 
+    public function send(RequestInterface $request, Config $config)
+    {
+        if ($request->getMethod() === 'CONNECT') {
+            return;
+        }
+
+        if ($config->debug()) {
+            echo nl2br(Message::toString($request));
+
+            return;
+        }
+
+        $options = [
+            'referer' => false,
+            'http_errors' => false,
+            'allow_redirects' => false,
+            'verify' => false,
+            'timeout' => $config->timeout(),
+            'connect_timeout' => $config->timeout(),
+            'decode_content' => false,
+            // 'stream' => true,
+            //
+            'sink' => $this,
+            'on_headers' => fn (ResponseInterface $response) => $this->onHeaders($response),
+        ];
+        $client = new Client;
+        $client->send($request, $options);
+    }
+
     protected function createStream(): StreamInterface
     {
         return Utils::streamFor(Utils::tryFopen($this->filename, $this->mode));
     }
 
-    public function onHeaders(ResponseInterface $response): void
+    protected function onHeaders(ResponseInterface $response): void
     {
         // We can't send headers if they are already sent
         if (headers_sent()) {
@@ -42,12 +74,17 @@ class SimpleStreamer implements StreamInterface
 
         header_remove();
 
+        $skipHeaders = [
+        ];
+
         $headers = $response->getHeaders();
 
         // Send headers
         foreach ($headers as $header => $values) {
-            foreach ($values as $value) {
-                header("$header: $value", false);
+            if (! in_array(strtolower($header), $skipHeaders)) {
+                foreach ($values as $value) {
+                    header("$header: $value", false);
+                }
             }
         }
 

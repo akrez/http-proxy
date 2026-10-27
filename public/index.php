@@ -1,23 +1,10 @@
 <?php
 
-require_once '../vendor/autoload.php';
+use Akrez\HttpProxy\Proxy;
+use GuzzleHttp\Psr7\ServerRequest;
 
-use Akrez\HttpProxy\Inline;
-use Akrez\HttpProxy\Factories\InbodyFactory;
-use Akrez\HttpProxy\Senders\CurlSender;
-use Akrez\HttpProxy\Senders\EnvelopeSender;
+include '../vendor/autoload.php';
 
-function inline()
-{
-    return Inline::emit();
-}
+$serverRequest = ServerRequest::fromGlobals();
 
-function inbody()
-{
-    return InbodyFactory::emitSender(new CurlSender);
-}
-
-function envelope()
-{
-    return InbodyFactory::emitSender(new EnvelopeSender);
-}
+Proxy::inlineCurl($serverRequest);
