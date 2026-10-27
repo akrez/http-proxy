@@ -51,6 +51,7 @@ class GuzzleStreamer implements StreamInterface
             'timeout' => $config->timeout(),
             'connect_timeout' => $config->timeout(),
             'decode_content' => false,
+            'stream' => true,
             //
             'sink' => $this,
             'on_headers' => fn (ResponseInterface $response) => $this->onHeaders($response),
