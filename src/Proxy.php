@@ -2,37 +2,44 @@
 
 namespace Akrez\HttpProxy;
 
+use Psr\Http\Message\ServerRequestInterface;
+
 class Proxy
 {
-    public function __construct(
-        protected InlineInitiator $inlineinitiator,
-        protected GuzzleSender $guzzleSender,
-        protected SapiEmitter $sapiEmitter,
-    ) {}
-
-    public function resolve(): bool
+    public static function inlineGuzzleSapi(ServerRequestInterface $serverRequest)
     {
-        $canInitiate = $this->inlineinitiator->initiate();
+        $inlineinitiator = new InlineInitiator($serverRequest);
+        $guzzleSender = new GuzzleSender;
+        $sapiEmitter = new SapiEmitter;
+
+        $canInitiate = $inlineinitiator->initiate();
         if (! $canInitiate) {
             return false;
         }
 
-        $request = $this->inlineinitiator->request();
+        $request = $inlineinitiator->request();
 
-        $response = $this->guzzleSender->send($request, $this->inlineinitiator->config());
+        $response = $guzzleSender->send($request, $inlineinitiator->config());
 
-        $this->sapiEmitter->setSkipHeaders([
-            'proxy-authenticate',
-            'proxy-authorization',
-            'te',
-            'transfer-encoding',
-            'keep-alive',
-            'connection',
-            'trailer',
-            'upgrade',
-        ])->emit($response);
+        $sapiEmitter->emit($response);
 
         return true;
     }
 
+    public static function inlineCurl(ServerRequestInterface $serverRequest)
+    {
+        $inlineinitiator = new InlineInitiator($serverRequest);
+        $curlStreamer = new CurlStreamer;
+
+        $canInitiate = $inlineinitiator->initiate();
+        if (! $canInitiate) {
+            return false;
+        }
+
+        $request = $inlineinitiator->request();
+
+        $curlStreamer->send($request, $inlineinitiator->config());
+
+        return true;
+    }
 }
