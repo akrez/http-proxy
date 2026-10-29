@@ -9,7 +9,7 @@
     ],
     "require": {
         "php": "^8.0",
-        "guzzlehttp/guzzle": "*"
+        "guzzlehttp/psr7": "*"
     },
     "require-dev": {
         "symfony/var-dumper": "*"

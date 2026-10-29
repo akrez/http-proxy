@@ -73,6 +73,7 @@ foreach ($all as $i => $token) {
         // remove all comments except first
         if ($first === true) {
             $first = false;
+
             continue;
         }
         unset($all[$i]);
@@ -148,5 +149,10 @@ foreach ($all as $i => $token) {
 
     $small .= isset($token[1]) ? $token[1] : $token;
 }
-file_put_contents($out, $small);
+file_put_contents($out, $small.implode("\n", [
+    '',
+    'use Akrez\HttpProxy\Proxy;',
+    'use GuzzleHttp\Psr7\ServerRequest;',
+    'Proxy::inlineCurl(ServerRequest::fromGlobals());',
+]));
 echo ' DONE ('.strlen($small).' bytes)'.PHP_EOL;
