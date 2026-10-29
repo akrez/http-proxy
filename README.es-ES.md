@@ -103,7 +103,7 @@ Host: www.proxy-host.com
 | Parte                                     | Explicación                                                                                                                                                                          |
 | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `https://www.proxy-host.com/inline.php` | Ruta del script en el host compartido. También puede actuar como un token para cada usuario. Es decir, el script podría alojarse en un archivo `unpredictable_personal_token.php` en lugar de `inline.php` |
-| `https_OPTIONS`                         | Sección de configuración: protocolo y método. Se separan con `_` y son opcionales. También puedes agregar `debug` (`https_OPTIONS_debug`).                                                           |
+| `https_OPTIONS`                         | Sección de configuración: protocolo y método. Se separan con `_` y son opcionales. También puedes agregar `base64` o `debug` (`https_OPTIONS_base64`).                                                 |
 | `www.blocked.com/sensored/content.json` | Dirección original de la solicitud junto con todos sus parámetros.                                                                                                                                     |
 
 ### ¿Por qué creo que este método es mejor?
@@ -118,32 +118,18 @@ Simplemente tienes que cambiar `$baseUrl` a `https://www.proxy-host.com/inline.p
 
 <div dir="rtl">
 
-No. Para esto usamos **MitmProxy** y manipular las solicitudes automáticamente. Los archivos necesarios se encuentran en la ruta `client/addons.py`.
+No. Para esto usamos **MitmProxy** para manipular las solicitudes automáticamente. Los archivos del cliente se encuentran en la carpeta `client`.
 
 ### Pasos de instalación y configuración
 
-Clona el repositorio para tener los archivos disponibles.
+1. Clona el repositorio para tener los archivos disponibles.
+2. Copia el archivo `client/config.json.sample` a `client/config.json` y configura el valor de `host_script_url` con la dirección de tu script en el host.
+3. Ejecuta el script de inicio automático (la descarga de MitmProxy, así como la generación e instalación del certificado de seguridad, se realizan automáticamente):
+   - **Windows:** ejecuta el archivo `client/windows-x86_64/run.bat`.
+   - **Linux:** ejecuta el script `client/linux-x86_64/run.sh`.
+4. En la configuración de proxy del sistema, establece el proxy en `127.0.0.1` y el puerto en `8080`.
 
-Descarga una de las versiones portátiles de MitmProxy desde <https://www.mitmproxy.org/downloads> y mueve el archivo `mitmdump.exe` a la carpeta `client`.
-
-Ejecuta el archivo mitmdump.exe una vez para que se generen los archivos de certificados de seguridad necesarios.
-
-Para instalar el certificado, ejecuta el siguiente comando en Command Prompt (Símbolo del sistema de Windows):
-
-```bash
-certutil -addstore root "%USERPROFILE%\.mitmproxy\mitmproxy-ca-cert.cer"
-```
-Para el navegador Firefox, realiza los pasos adicionales según la guía oficial de MitmProxy.
-
-Abre el archivo addons.py y completa la variable config con la configuración necesaria.
-
-Finalmente, ejecuta MitmProxy con los siguientes parámetros:
-
-```bash
-mitmdump.exe -s addons.py
-```
-
- En la configuración de proxy del sistema de Windows, establece el proxy en `127.0.0.1` y el puerto en `local_server_port` (aquí 8080).
+Para el navegador Firefox, realiza los pasos adicionales para importar el certificado manualmente según la guía oficial de MitmProxy.
 
 </div>
 
@@ -158,16 +144,15 @@ Ejecuta el comando `composer require akrez/http-proxy` para que se cree la carpe
 
 require_once './vendor/autoload.php';
 
-use Akrez\HttpProxy\Factories\InlineFactory;
-use Akrez\HttpProxy\Senders\CurlSender;
+use Akrez\HttpProxy\Proxy;
+use GuzzleHttp\Psr7\ServerRequest;
 
-$request = InlineFactory::emitSender(new CurlSender);
-
+Proxy::inlineCurl(ServerRequest::fromGlobals());
 ```
 
 - La ruta `./vendor/autoload.php` puede variar según dónde lo subas.
 - El archivo `inline.php` puede tener cualquier otro nombre, como se mencionó anteriormente.
-- Si el valor de `$request` es `null`, significa que el script no se invocó correctamente, por ejemplo, se llamó solo a `https://proxy-php-host.com/inline.php` sin los parámetros necesarios.
+- Si la solicitud no se invocó correctamente (por ejemplo, si se llama solo a `https://proxy-php-host.com/inline.php` sin los parámetros necesarios), el método devolverá `false`.
 
 </div>
 
