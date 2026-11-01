@@ -51,7 +51,7 @@ class CurlStreamer
             CURLOPT_HTTPHEADER => $headers,
 
             CURLOPT_HTTP_CONTENT_DECODING => false,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_HTTP_VERSION => $this->getProtocolVersion($request),
         ];
 
         $ch = curl_init();
@@ -95,5 +95,32 @@ class CurlStreamer
         flush();
 
         return $len;
+    }
+
+    protected function getProtocolVersion(RequestInterface $request): int
+    {
+        $protocolVersion = $request->getProtocolVersion();
+
+        if (in_array($protocolVersion, ['1.0'])) {
+            return CURL_HTTP_VERSION_1_0;
+        }
+        if (in_array($protocolVersion, ['1.1'])) {
+            return CURL_HTTP_VERSION_1_1;
+        }
+        if (in_array($protocolVersion, ['2', '2.0'])) {
+            if (defined('CURL_HTTP_VERSION_2TLS')) {
+                return CURL_HTTP_VERSION_2TLS;
+            }
+            if (defined('CURL_HTTP_VERSION_2_0')) {
+                return CURL_HTTP_VERSION_2_0;
+            }
+        }
+        if (in_array($protocolVersion, ['3', '3.0'])) {
+            if (defined('CURL_HTTP_VERSION_3')) {
+                return CURL_HTTP_VERSION_3;
+            }
+        }
+
+        return CURL_HTTP_VERSION_NONE;
     }
 }
